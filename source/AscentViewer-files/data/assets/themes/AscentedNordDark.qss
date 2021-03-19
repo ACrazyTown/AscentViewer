@@ -70,7 +70,7 @@ QFrame#Bottom
 
 QToolButton#BottomButton
 {
-    background: @accentColorMain;
+    background: @accentColorDarker;
 }
 
 QToolButton::menu-indicator#BottomButton
