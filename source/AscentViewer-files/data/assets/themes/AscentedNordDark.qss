@@ -18,8 +18,7 @@ QMenu
 QMenu::separator {
     height: 1px;
     background: #3b4252;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 0px 4px 0px 4px;
 }
 
 /* from https://forum.qt.io/topic/89473/how-can-i-change-padding-for-icon-on-qmenubar-item */
@@ -27,9 +26,7 @@ QMenu::item
 {
     background-color: rgb(38, 43, 53);
     min-height: 20px;
-    padding: 2px 20px 2px 10px;
-    padding-left: 10px;
-    padding-right: 20px;
+    padding: 2px 10px 2px 5px;
     font-size: 12px;
     font-weight: normal;
 }
@@ -37,7 +34,7 @@ QMenu::item
 /* these icons are really, REALLY broken | just a note: this piece of code below (QMenu::icon) does not work if the piece of code above (QMenu::item) is not there */
 QMenu::icon
 {
-    padding-left: 10px;
+    padding-left: 8px;
 }
 
 QMenu::item:disabled

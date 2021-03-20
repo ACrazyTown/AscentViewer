@@ -178,6 +178,8 @@ class MainUi(QtWidgets.QMainWindow):
             debugMenu = mainMenu.addMenu(localization["mainUIElements"]["menuBar"]["debug"]["title"])
         helpMenu = mainMenu.addMenu(localization["mainUIElements"]["menuBar"]["help"]["title"])
 
+        # "QtGui.QIcon("data/assets/img/empty_16x16.png")" is an empty 16x16 icon. It's used to fixed weird menu paddings. It's a wonky workaround, though.
+
         openImgButton = QtWidgets.QAction(QtGui.QIcon("data/assets/img/file.png"), localization["mainUIElements"]["menuBar"]["file"]["openImgText"], self)
         openImgButton.setShortcut("CTRL+O")
         openImgButton.setStatusTip("Open an image file")
@@ -193,35 +195,35 @@ class MainUi(QtWidgets.QMainWindow):
         exitButton.setStatusTip("Exit application")
         exitButton.triggered.connect(self.close)
 
-        settingsButton = QtWidgets.QAction(QtGui.QIcon(), localization["mainUIElements"]["menuBar"]["edit"]["settings"], self)
+        settingsButton = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), localization["mainUIElements"]["menuBar"]["edit"]["settings"], self)
         settingsButton.setShortcut("CTRL+SHIFT+E")
         settingsButton.setStatusTip("Open the settings window")
         settingsButton.triggered.connect(self.openSettingsWin)
 
-        self.navButtonBack = QtWidgets.QAction(QtGui.QIcon(), localization["mainUIElements"]["menuBar"]["navigation"]["back"], self)
+        self.navButtonBack = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), localization["mainUIElements"]["menuBar"]["navigation"]["back"], self)
         self.navButtonBack.setShortcut("Left")
         self.navButtonBack.setStatusTip("Go to previous image in directory")
         self.navButtonBack.triggered.connect(self.prevImage)
         self.navButtonBack.setEnabled(False)
 
-        self.navButtonForw = QtWidgets.QAction(QtGui.QIcon(), localization["mainUIElements"]["menuBar"]["navigation"]["forw"], self)
+        self.navButtonForw = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), localization["mainUIElements"]["menuBar"]["navigation"]["forw"], self)
         self.navButtonForw.setShortcut("Right")
         self.navButtonForw.setStatusTip("Go to next image in directory")
         self.navButtonForw.triggered.connect(self.nextImage)
         self.navButtonForw.setEnabled(False)
 
         if config["debug"]["enableDebugMenu"]:
-            logWindowButton = QtWidgets.QAction(QtGui.QIcon(), "Log Viewer", self)
+            logWindowButton = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "Log Viewer", self)
             logWindowButton.setShortcut("CTRL+Shift+L")
             logWindowButton.setStatusTip("Open the log viewer window.")
             logWindowButton.triggered.connect(self.openLogWin)
 
-            dummyException = QtWidgets.QAction(QtGui.QIcon(), "Raise dummy exception", self)
+            dummyException = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "Raise dummy exception", self)
             dummyException.setShortcut("CTRL+Shift+F10")
             dummyException.setStatusTip("Raise a dummy exception")
             dummyException.triggered.connect(self.dummyExceptionFunc)
 
-        resetCfg = QtWidgets.QAction(QtGui.QIcon(), localization["mainUIElements"]["menuBar"]["tools"]["resetConfig"], self)
+        resetCfg = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), localization["mainUIElements"]["menuBar"]["tools"]["resetConfig"], self)
         resetCfg.setShortcut("CTRL+Shift+F9")
         resetCfg.setStatusTip("Reset the configuration file.")
         resetCfg.triggered.connect(self.resetConfigDialog)
@@ -271,24 +273,24 @@ class MainUi(QtWidgets.QMainWindow):
         bottomButton.menu().addAction(self.bottomButtonCopyDetails)
         bottomButton.menu().addSeparator()
 
-        bottomButtonSizeMenu = bottomButton.menu().addMenu("Details Panel &size")
+        bottomButtonSizeMenu = bottomButton.menu().addMenu(QtGui.QIcon("data/assets/img/empty_16x16.png"), "Details Panel &size")
 
         # NOTE: https://stackoverflow.com/a/48501804/14558305
-        size90 = QtWidgets.QAction("&Small (90) (Default)", self)
+        size90 = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"),"&Small (90) (Default)", self)
         size90.triggered.connect(lambda state, h=90: self.bottomChangeSizeFunc(h))
 
-        size130 = QtWidgets.QAction("&Normal (130)", self)
+        size130 = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "&Medium-sized (130)", self)
         size130.triggered.connect(lambda state, h=130: self.bottomChangeSizeFunc(h))
 
-        size160 = QtWidgets.QAction("&Large (160)", self)
+        size160 = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "&Large (160)", self)
         size160.triggered.connect(lambda state, h=160: self.bottomChangeSizeFunc(h))
 
-        size200 = QtWidgets.QAction("&Huge (200)", self)
+        size200 = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "&Huge (200)", self)
         size200.triggered.connect(lambda state, h=200: self.bottomChangeSizeFunc(h))
 
         bottomButtonSizeMenu.addActions([size90, size130, size160, size200])
 
-        bottomButtonColumnSettings = QtWidgets.QAction("Details Panel column &settings", self)
+        bottomButtonColumnSettings = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "Details Panel column &settings", self)
         bottomButtonColumnSettings.triggered.connect(self.bottomColumnSettings)
 
         bottomButtonAccentColorSettings = QtWidgets.QAction("&Accent color settings", self)
@@ -778,9 +780,10 @@ class MainUi(QtWidgets.QMainWindow):
         font.setBold(True)
         label.setFont(font)
 
-        monospaceFont = QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont)
-        #monospaceFont.setPointSize(10)
-        #monospaceFont = QtGui.QFont("Cascadia Code", 8)
+        if platform.system() == "Windows":
+            monospaceFont = QtGui.QFont("Consolas", 10)
+        else:
+            monospaceFont = QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont)
 
         self.logTextEdit = QtWidgets.QPlainTextEdit(logViewer)
         self.logTextEdit.setFont(monospaceFont)
