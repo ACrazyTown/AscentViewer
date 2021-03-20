@@ -1,4 +1,5 @@
 This is a text file containing some of the links that helped me on the journey of making AscentViewer. It's kinda messy, though.
+NOTE: Some things might be missing.
 
 https://pythonspot.com/pyqt5/
 https://stackoverflow.com/questions/21802868/python-how-to-resize-raster-image-with-pyqt
@@ -175,7 +176,10 @@ https://doc.qt.io/archives/qt-4.8/qlabel.html#linkActivated
 https://stackoverflow.com/a/34056847/14558305
 https://pyautogui.readthedocs.io/en/latest/keyboard.html
 
-*missing things, will add later*
+Some things might be missing here.
+
+https://stackoverflow.com/questions/8689964/why-do-some-functions-have-underscores-before-and-after-the-function-name/8689983#8689983
+https://stackoverflow.com/questions/7208861/replace-characters-not-working-in-python/7208922#7208922
 
 https://stackoverflow.com/a/7208922/14558305
 https://stackoverflow.com/a/27086669/14558305

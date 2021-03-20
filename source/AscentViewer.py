@@ -58,11 +58,11 @@ args = parser.parse_args()
 
 if args.version:
     from AscentViewer_files.ascv_main import ver
-    from AscentViewer_files.ascv_minimal import ver
+    from AscentViewer_files.ascv_minimal import ver as mver
 
     print(f"Launcher version: {lver}")
     print(f"AscentViewer version : {ver}")
-    print(f"Minimal AscentViewer version : {ver}")
+    print(f"Minimal AscentViewer version : {mver}")
     parser.exit()
 
 if args.minimal:
