@@ -36,8 +36,6 @@ from PIL import Image, ImageFont
 from pkg_resources import get_distribution
 import pyautogui
 
-ver = "1.0.0_dev-3.1-PyQt5"
-
 date_format = "%d-%m-%Y %H:%M:%S"
 date_format_file = "%d%m%Y_%H%M%S" # for log files
 
@@ -165,7 +163,7 @@ class MainUi(QtWidgets.QMainWindow):
         pickedChoice = random.choice(funFacts)
         with open(f"data/assets/html/{lang}/welcome.html") as f:
             # from https://stackoverflow.com/a/8369345/14558305
-            welcome = f.read().replace('\n', '')
+            welcome = f.read()
             self.label.setText(welcome + pickedChoice)
         # from https://stackoverflow.com/a/37865172/14558305 and https://doc.qt.io/archives/qt-4.8/qlabel.html#linkActivated
         self.label.linkActivated.connect(self.simulateMenuOpen)
@@ -915,7 +913,7 @@ class MainUi(QtWidgets.QMainWindow):
 
         # from https://stackoverflow.com/a/8369345/14558305
         with open(f"data/assets/html/{lang}/help.html", "r") as f:
-            data = f.read().replace('\n', '')
+            data = f.read()
 
         textView.setOpenExternalLinks(True)
         textView.setText(data)
@@ -1167,7 +1165,7 @@ class MainUi(QtWidgets.QMainWindow):
             about.label_10.setText(_translate("Form", "unknown"))
         # from https://stackoverflow.com/a/8369345/14558305
         with open(f"data/assets/html/{lang}/about.html", "r") as f:
-            desc = f.read().replace('\n', '')
+            desc = f.read()
             about.label_11.setText(_translate("Form", desc))
         about.label_4.setText(_translate("Form", "<a href=\"https://github.com/despawnedd/AscentViewer/\">{}</a>").format(localization["mainUIElements"]["aboutWindow"]["GitHubLink"])) # thanks to Anthony for .format
         about.label_6.setText(_translate("Form", "<a href=\"https://dd.acrazytown.com/AscentViewer/\">{}</a>").format(localization["mainUIElements"]["aboutWindow"]["website"]))
@@ -1197,6 +1195,9 @@ if __name__ == "__main__":
     except:
         pass
 
+    with open("data/assets/version_info.txt", "r") as f:
+        ver = f.read().replace("\n", "")
+
     config = json.load(open("data/user/config.json", encoding="utf-8")) # using json instead of QSettings, for now
     lang = config["localization"]["lang"]
     localization = json.load(open(f"data/assets/localization/lang/{lang}.json", encoding="utf-8"))
@@ -1212,7 +1213,6 @@ if __name__ == "__main__":
         print("disabled, not deleting logs.")
 
     logfile = f"data/user/temp/logs/log_{datetime.datetime.now().strftime(date_format_file)}.log"
-    #inMemoryLogfile = tempfile.SpooledTemporaryFile()
 
     mainFormatterString = "[%(asctime)s | %(name)s | %(funcName)s | %(levelname)s] %(message)s"
     mainFormatter = logging.Formatter(mainFormatterString, date_format)

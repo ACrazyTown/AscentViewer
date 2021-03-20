@@ -30,8 +30,6 @@ import subprocess
 import py_compile
 import argparse
 
-lver = "1.1.0"
-
 try:
     os.chdir(__file__.replace(os.path.basename(__file__), ""))
 except:
@@ -57,12 +55,10 @@ parser.add_argument("-m", "--minimal", help="open the minimal AscentViewer inste
 args = parser.parse_args()
 
 if args.version:
-    from AscentViewer_files.ascv_main import ver
-    from AscentViewer_files.ascv_minimal import ver as mver
+    with open("AscentViewer_files/data/assets/version_info.txt", "r") as f:
+        ver = f.read().replace("\n", "")
 
-    print(f"Launcher version: {lver}")
     print(f"AscentViewer version : {ver}")
-    print(f"Minimal AscentViewer version : {mver}")
     parser.exit()
 
 if args.minimal:

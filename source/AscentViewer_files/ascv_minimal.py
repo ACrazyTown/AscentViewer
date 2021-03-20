@@ -25,15 +25,8 @@ import os
 import platform
 import signal
 import glob
-import shutil
-import datetime
 
 from PyQt5 import QtGui, QtCore, QtWidgets
-
-ver = "1.0.0_dev-1.0"
-
-date_format = "%d-%m-%Y %H:%M:%S"
-date_format_file = "%d%m%Y_%H%M%S" # for log files
 
 class MainUi(QtWidgets.QMainWindow):
     def __init__(self):
@@ -149,7 +142,7 @@ class MainUi(QtWidgets.QMainWindow):
         # from https://stackoverflow.com/a/34802367/14558305
         self.label.resizeEvent = (lambda old_method: (lambda event: (self.updateFunction(1), old_method(event))[-1]))(self.label.resizeEvent)
 
-        self.statusBar().showMessage("Successfully loaded, version: {ver}")
+        self.statusBar().showMessage(f"Successfully loaded, version: {ver}")
 
     # from https://stackoverflow.com/a/4839906/14558305
     def labelOnContextMenu(self, point):
@@ -334,6 +327,9 @@ if __name__ == "__main__":
         os.chdir(__file__.replace(os.path.basename(__file__), "")) # thanks to Anthony for this
     except:
         pass
+
+    with open("data/assets/version_info.txt", "r") as f:
+        ver = f.read().replace("\n", "")
 
     # start the actual program
     app = QtWidgets.QApplication(sys.argv)
