@@ -36,7 +36,10 @@ from PIL import Image, ImageFont
 from pkg_resources import get_distribution
 import pyautogui
 
-from lib.headerlike import *
+ver = "1.0.0_dev-3.1-PyQt5"
+
+date_format = "%d-%m-%Y %H:%M:%S"
+date_format_file = "%d%m%Y_%H%M%S" # for log files
 
 # from http://pantburk.info/?blog=77 and https://dzone.com/articles/python-custom-logging-handler-example
 class StatusBarHandler(logging.StreamHandler):
@@ -199,6 +202,7 @@ class MainUi(QtWidgets.QMainWindow):
         settingsButton.setShortcut("CTRL+SHIFT+E")
         settingsButton.setStatusTip("Open the settings window")
         settingsButton.triggered.connect(self.openSettingsWin)
+        settingsButton.setEnabled(False)
 
         self.navButtonBack = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), localization["mainUIElements"]["menuBar"]["navigation"]["back"], self)
         self.navButtonBack.setShortcut("Left")
@@ -230,12 +234,12 @@ class MainUi(QtWidgets.QMainWindow):
 
         helpButton = QtWidgets.QAction(QtGui.QIcon("data/assets/img/icon3_small.png"), localization["mainUIElements"]["menuBar"]["help"]["help"], self)
         helpButton.setShortcut("F1")
-        helpButton.setStatusTip("Open the help window.")
+        helpButton.setStatusTip("Open the help window")
         helpButton.triggered.connect(self.openHelpWin)
 
         aboutButton = QtWidgets.QAction(QtGui.QIcon("data/assets/img/icon3_small.png"), localization["mainUIElements"]["menuBar"]["help"]["about"], self)
         aboutButton.setShortcut("Shift+F1")
-        aboutButton.setStatusTip("Open the about window.")
+        aboutButton.setStatusTip("Open the about window")
         aboutButton.triggered.connect(self.openAboutWin)
 
         fileMenu.addAction(openImgButton)
@@ -254,26 +258,29 @@ class MainUi(QtWidgets.QMainWindow):
 
         toolsMenu.addAction(resetCfg)
 
+        self.menuBarCompactMenu = QtWidgets.QMenu()
+        self.menuBarCompactMenu.addMenu(fileMenu)
+        self.menuBarCompactMenu.addMenu(editMenu)
+        self.menuBarCompactMenu.addMenu(navMenu)
+        self.menuBarCompactMenu.addMenu(toolsMenu)
+        if config["debug"]["enableDebugMenu"]:
+            self.menuBarCompactMenu.addMenu(debugMenu)
+        self.menuBarCompactMenu.addMenu(helpMenu)
+
         helpMenu.addAction(helpButton)
         helpMenu.addSeparator()
         helpMenu.addAction(aboutButton)
 
-        bottomButton = QtWidgets.QToolButton()
-        bottomButton.setObjectName("BottomButton")
-        bottomButton.setShortcut("CTRL+ALT+M")
-        bottomButton.setMenu(QtWidgets.QMenu(bottomButton))
-        bottomButton.setPopupMode(QtWidgets.QToolButton.InstantPopup)
-        bottomButton.setFixedSize(20, 20)
-        bottomButton.setAttribute(QtCore.Qt.WA_NoSystemBackground)
-
+        self.bottomMenu = QtWidgets.QMenu()
+        
         self.bottomButtonCopyDetails = QtWidgets.QAction("&Copy details", self)
         self.bottomButtonCopyDetails.triggered.connect(self.bottomCopyFunc)
         self.bottomButtonCopyDetails.setEnabled(False)
 
-        bottomButton.menu().addAction(self.bottomButtonCopyDetails)
-        bottomButton.menu().addSeparator()
+        self.bottomMenu.addAction(self.bottomButtonCopyDetails)
+        self.bottomMenu.addSeparator()
 
-        bottomButtonSizeMenu = bottomButton.menu().addMenu(QtGui.QIcon("data/assets/img/empty_16x16.png"), "Details Panel &size")
+        bottomButtonSizeMenu = self.bottomMenu.addMenu(QtGui.QIcon("data/assets/img/empty_16x16.png"), "Details Panel &size")
 
         # NOTE: https://stackoverflow.com/a/48501804/14558305
         size90 = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"),"&Small (90) (Default)", self)
@@ -296,9 +303,17 @@ class MainUi(QtWidgets.QMainWindow):
         bottomButtonAccentColorSettings = QtWidgets.QAction("&Accent color settings", self)
         bottomButtonAccentColorSettings.triggered.connect(self.accentColorSettings)
 
-        bottomButton.menu().addAction(bottomButtonColumnSettings)
-        bottomButton.menu().addSeparator()
-        bottomButton.menu().addAction(bottomButtonAccentColorSettings)
+        self.bottomMenu.addAction(bottomButtonColumnSettings)
+        self.bottomMenu.addSeparator()
+        self.bottomMenu.addAction(bottomButtonAccentColorSettings)
+
+        bottomButton = QtWidgets.QToolButton()
+        bottomButton.setObjectName("BottomButton")
+        bottomButton.setShortcut("CTRL+ALT+M")
+        bottomButton.setMenu(self.bottomMenu)
+        bottomButton.setPopupMode(QtWidgets.QToolButton.InstantPopup)
+        bottomButton.setFixedSize(20, 20)
+        bottomButton.setAttribute(QtCore.Qt.WA_NoSystemBackground)
 
         bottomButtonVBoxFrame = QtWidgets.QFrame()
         bottomButtonVBox = QtWidgets.QVBoxLayout(bottomButtonVBoxFrame)
@@ -387,9 +402,12 @@ class MainUi(QtWidgets.QMainWindow):
 
         vBox.addWidget(self.splitter)
 
-        self.label.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-        self.label.addAction(openImgButton)
-        self.label.addAction(openDirButton)
+        # from https://stackoverflow.com/a/4839906/14558305
+        self.bottom.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.bottom.customContextMenuRequested.connect(self.bottomOnContextMenu)
+
+        self.label.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.label.customContextMenuRequested.connect(self.labelOnContextMenu)
 
         # from https://pythonpyqt.com/qtimer/
         self.timer = QtCore.QTimer()
@@ -403,13 +421,35 @@ class MainUi(QtWidgets.QMainWindow):
         #self.setStyleSheet(stylesheet)
         ascvLogger.info("GUI has been initialized.")
 
+    # from https://stackoverflow.com/a/4839906/14558305
+    def bottomOnContextMenu(self, point):
+        self.bottomMenu.exec_(self.bottom.mapToGlobal(point))
+
+    def labelOnContextMenu(self, point):
+        self.menuBarCompactMenu.exec_(self.label.mapToGlobal(point))
+
     def simulateMenuOpen(self):
         # from https://stackoverflow.com/a/34056847/14558305 and https://pyautogui.readthedocs.io/en/latest/keyboard.html
         # NOTE: only works when the language it set to English (en-us.json)
         pyautogui.hotkey("alt", "f")
 
     def bottomCopyFunc(self, height):
-        print(self.fileLabel.text())
+        details = ""
+        details += self.fileLabel.text()
+        details += "\n\n"
+        details += self.dateModifiedLabel.text()
+        details += "\n"
+        details += self.dimensionsLabel.text()
+
+        # thanks to https://stackoverflow.com/a/7208922/14558305 and https://stackoverflow.com/a/27086669/14558305
+        toReplace = ["<b>", "</b>"]
+        for c in toReplace:
+            details = details.replace(c, "")
+
+        # thanks to https://stackoverflow.com/a/23119741/14558305
+        cb = QtWidgets.QApplication.clipboard()
+        cb.clear(mode=cb.Clipboard )
+        cb.setText(details, mode=cb.Clipboard)
 
     def bottomChangeSizeFunc(self, height):
         self.splitter.setSizes([1, height])
@@ -864,9 +904,7 @@ class MainUi(QtWidgets.QMainWindow):
         programName.setFont(font)
 
         helpTitle = QtWidgets.QLabel("Help")
-        font = QtGui.QFont()
-        font.setFamily("Selawik Semilight")
-        font.setPointSize(26)
+        font = QtGui.QFont("Selawik Semilight", 26)
         helpTitle.setFont(font)
         helpTitle.setStyleSheet("color: rgba(255, 255, 255, 0.5);") # from https://www.w3schools.com/cssref/css3_pr_opacity.asp
 

@@ -1,13 +1,13 @@
 .vscode
-.idea
 .pytest_cache
 source/.vs
 source/.vscode
 tests_and_stuff
 tests/__pycache__
-source/AscentViewer-files/data/user/temp/logs/log*.log
-source/AscentViewer-files/lib/__pycache__
-source/AscentViewer-files/*.pyc
+source/AscentViewer_files/data/user/temp/logs/log*.log
+source/AscentViewer_files/__pycache__
+source/AscentViewer_files/lib/__pycache__
+source/AscentViewer_files/*.pyc
 output.*
 source/icon3_UaA_icon.ico
 source/releaser/lib/__pycache__
@@ -16,10 +16,7 @@ source/releaser/exports
 source/releaser/config/config3.1 - Copy.json
 source/releaser/exporter.zip
 source/releaser/test.txt
-source/misc/icons_src/icon.log.csv
-source/misc/icons_src/icon.svg
-source/AscentViewer-files/test.py
-source/AscentViewer-files/data/assets/markdown/README.md
-source/AscentViewer-files/data/assets/localization/lang/secret.json
-source/AscentViewer-files/data/user/temp/thumbnails/tn_current-thumb.png
-source/AscentViewer-files/data/assets/img/twemoji
+source/AscentViewer_files/test.py
+source/AscentViewer_files/data/assets/localization/lang/secret.json
+source/AscentViewer_files/data/user/temp/thumbnails/tn_current-thumb.png
+source/AscentViewer_files/lib/gui

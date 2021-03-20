@@ -174,3 +174,16 @@ https://stackoverflow.com/a/37865172/14558305
 https://doc.qt.io/archives/qt-4.8/qlabel.html#linkActivated
 https://stackoverflow.com/a/34056847/14558305
 https://pyautogui.readthedocs.io/en/latest/keyboard.html
+
+*missing things, will add later*
+
+https://stackoverflow.com/a/7208922/14558305
+https://stackoverflow.com/a/27086669/14558305
+https://stackoverflow.com/a/23119741/14558305
+https://stackoverflow.com/a/4839906/14558305
+https://stackabuse.com/command-line-arguments-in-python/
+https://stackoverflow.com/questions/14950964/overriding-default-argparse-h-behaviour
+https://stackoverflow.com/questions/24180527/argparse-required-arguments-listed-under-optional-arguments
+https://stackoverflow.com/questions/4152963/get-name-of-current-script-in-python
+https://stackoverflow.com/questions/53434478/python-argparse-ignore-other-options-when-a-specific-option-is-used
+https://stackoverflow.com/questions/6609956/python-function-argument-list-formatting
