@@ -43,10 +43,10 @@ def customExceptHook(exctype, value, traceback):
         sys.__excepthook__(exctype, value, traceback)
 sys.excepthook = customExceptHook
 
+# FIX USAGE!
 parser = argparse.ArgumentParser(
     description="This is the AscentViewer launcher script.",
     epilog="Thanks for using AscentViewer!",
-    usage="%(prog)s [-h] [-V] [-f FILE]",
     conflict_handler="resolve")
 
 parser.add_argument("-V", "--version", help="show program version", action="store_true")

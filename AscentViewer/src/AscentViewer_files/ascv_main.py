@@ -394,7 +394,7 @@ class MainUi(QtWidgets.QMainWindow):
         self.splitter.setObjectName("MainSplitter")
         self.splitter.addWidget(self.label)
         self.splitter.addWidget(self.bottom)
-        self.splitter.setCollapsible(1, False)
+        #self.splitter.setCollapsible(1, False)
         self.splitter.setStretchFactor(0, 1)
         self.splitter.setSizes([1, config["windowProperties"]["bottomSplitterPanelH"]])
 
