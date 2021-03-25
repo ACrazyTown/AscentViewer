@@ -110,7 +110,7 @@ class MainUi(QtWidgets.QMainWindow):
         for f in selawikFonts:
             f = f.replace("\\", "/")
             QtGui.QFontDatabase.addApplicationFont(f)
-        _ = QtGui.QFont("Selawik Bold") # this PROBABLY fixes an issue with KDE's Plasma where the font wouldn't display correctly
+        _ = QtGui.QFont("Selawik Bold") # this PROBABLY fixes an issue with KDE Plasma where the font wouldn't display correctly
 
         if config["hellMode"]: # just a funny easter egg
             mainFont = QtGui.QFont("Selawik")
@@ -578,7 +578,7 @@ class MainUi(QtWidgets.QMainWindow):
         self.dirImageList_.sort(key=str.lower)
 
         if len(self.dirImageList_) != 0:
-            ascvLogger.info(f"Succesfully created dirImageList_. It's not empty.")
+            ascvLogger.info(f"Successfully created dirImageList_. It's not empty.")
             ascvLogger.debug(f"dirImageList_: {self.dirImageList_}")
             ascvLogger.info(f"dirImageList_ length: {len(self.dirImageList_)}")
             ascvLogger.info(f"Setting dirImageList to dirImageList_")
@@ -597,7 +597,7 @@ class MainUi(QtWidgets.QMainWindow):
             self.navButtonForw.setEnabled(True)
             self.bottomButtonCopyDetails.setEnabled(True)
         else:
-            ascvLogger.info(f"Succesfully created dirImageList_, but it's empty! Not setting dirImageList to dirImageList_")
+            ascvLogger.info(f"Successfully created dirImageList_, but it's empty! Not setting dirImageList to dirImageList_")
 
     # I should clean up these two too
     def prevImage(self):
@@ -725,7 +725,7 @@ class MainUi(QtWidgets.QMainWindow):
     # from https://stackoverflow.com/a/33741755/14558305
     def except_hook(self, cls, exception, traceback):
         # custom except hook
-        ascvLogger.critical(f"An exception occured: \"{exception}\" | Saving settings in case of a fatal issue...")
+        ascvLogger.critical(f"An exception occurred: \"{exception}\" | Saving settings in case of a fatal issue...")
         sys.__excepthook__(cls, exception, traceback)
         self.onCloseActions()
 
@@ -747,18 +747,18 @@ class MainUi(QtWidgets.QMainWindow):
         settings.show()
 
     def accentColorSettings(self):
-        acsettings = QtWidgets.QDialog(self, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
+        acSettings = QtWidgets.QDialog(self, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
 
-        acsettings.resize(300, 200)
-        geo = acsettings.geometry()
+        acSettings.resize(300, 200)
+        geo = acSettings.geometry()
         geo.moveCenter(self.geometry().center())
-        acsettings.setGeometry(geo)
+        acSettings.setGeometry(geo)
 
-        acsettings.setAttribute(QtCore.Qt.WA_QuitOnClose, True)
-        acsettings.setModal(True)
-        acsettings.setWindowTitle("Accent Color")
+        acSettings.setAttribute(QtCore.Qt.WA_QuitOnClose, True)
+        acSettings.setModal(True)
+        acSettings.setWindowTitle("Accent Color")
 
-        mainVBox = QtWidgets.QVBoxLayout(acsettings)
+        mainVBox = QtWidgets.QVBoxLayout(acSettings)
         mainVBox.setAlignment(QtCore.Qt.AlignTop)
 
         firstHBoxFrame = QtWidgets.QFrame()
@@ -785,7 +785,7 @@ class MainUi(QtWidgets.QMainWindow):
         mainVBox.addWidget(secondHBoxFrame)
         mainVBox.addWidget(thirdHBoxFrame)
 
-        acsettings.show()
+        acSettings.show()
 
     def openSettingsWin(self):
         settings = QtWidgets.QDialog(self, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
@@ -1244,7 +1244,7 @@ if __name__ == "__main__":
 
     if platform.system() == "Windows":
         # makes the AscentViewer icon appear in the taskbar, more info here: "https://stackoverflow.com/questions/1551605/how-to-set-applications-taskbar-icon-in-windows-7/1552105#1552105"
-        # (newer comamnd gotten from 15-minute-apps: "https://github.com/learnpyqt/15-minute-apps")
+        # (newer command gotten from 15-minute-apps: "https://github.com/learnpyqt/15-minute-apps")
         from PyQt5 import QtWinExtras
         QtWinExtras.QtWin.setCurrentProcessExplicitAppUserModelID(f"DespawnedDiamond.AscentViewer.ascv.{ver}")
 
@@ -1277,7 +1277,7 @@ if __name__ == "__main__":
     dark_palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.white)
     app.setPalette(dark_palette)
 
-    with open("data/assets/themes/{}.qss".format(config["theme"]["name"]), "r") as file:
+    with open("data/assets/themes/{}.css".format(config["theme"]["name"]), "r") as file:
         stylesheet = file.read()
 
     stylesheet = stylesheet.replace("@accentColorMain", config["theme"]["accentColorMain"])
