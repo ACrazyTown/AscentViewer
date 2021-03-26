@@ -198,3 +198,5 @@ https://linuxize.com/post/bash-comments/
 https://stackoverflow.com/questions/3349105/how-can-i-set-the-current-working-directory-to-the-directory-of-the-script-in-ba
 https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
 https://stackoverflow.com/questions/8967902/why-do-you-need-to-put-bin-bash-at-the-beginning-of-a-script-file
+https://stackoverflow.com/questions/5214578/print-string-to-text-file
+https://stackoverflow.com/questions/46746537/json-force-every-opening-curly-brace-to-appear-in-a-new-separate-line

@@ -30,6 +30,7 @@ import shutil
 import datetime
 import random
 import logging
+import re
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 from PIL import Image, ImageFont
@@ -601,9 +602,16 @@ class MainUi(QtWidgets.QMainWindow):
         self.updateFunction(0)
 
     def dumpJson(self):
+        toWrite = json.dumps(config, ensure_ascii=False, indent=4)
+
+        # from https://stackoverflow.com/questions/46746537/json-force-every-opening-curly-brace-to-appear-in-a-new-separate-line
+        toWrite = re.sub(r'^((\s*)".*?":)\s*([\[{])', r'\1\n\2\3', toWrite, flags=re.MULTILINE)
+
+        toWrite += "\n" # https://codeyarns.com/tech/2017-02-22-python-json-dump-misses-last-newline.html
+
         with open("data/user/config.json", "w", encoding="utf-8", newline="\n") as cf:
-            json.dump(config, cf, ensure_ascii=False, indent=4)
-            cf.write("\n") # https://codeyarns.com/tech/2017-02-22-python-json-dump-misses-last-newline.html
+            # from https://stackoverflow.com/questions/5214578/print-string-to-text-file
+            cf.write(toWrite)
 
     def onCloseActions(self):
         config["windowProperties"]["width"] = self.width()

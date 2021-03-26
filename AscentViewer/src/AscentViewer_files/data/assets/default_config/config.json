@@ -1,12 +1,14 @@
 {
-    "windowProperties": {
+    "windowProperties":
+    {
         "width": 800,
         "height": 700,
         "x": 100,
         "y": 100,
         "bottomSplitterPanelH": 90
     },
-    "theme": {
+    "theme":
+    {
         "name": "AscentedNordDark",
         "style": "Fusion",
         "accentColorMain": "#777cc1",
@@ -14,24 +16,31 @@
         "accentColorLighter": "#a3a8e6",
         "accentColorIsALightColor": false
     },
-    "localization": {
+    "localization":
+    {
         "lang": "en-us"
     },
-    "prompts": {
+    "prompts":
+    {
         "enableExitPrompt": true
     },
-    "debug": {
+    "debug":
+    {
         "enableDebugMenu": true,
-        "logging": {
+        "logging":
+        {
             "loggingLevel": "INFO"
         }
     },
-    "temporary_files": {
-        "logs": {
+    "temporary_files":
+    {
+        "logs":
+        {
             "deleteLogsOnStartup": true
         }
     },
-    "experimental": {
+    "experimental":
+    {
         "enableExperimentalUI": false
     },
     "hellMode": false
