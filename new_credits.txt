@@ -191,3 +191,10 @@ https://stackoverflow.com/questions/24180527/argparse-required-arguments-listed-
 https://stackoverflow.com/questions/4152963/get-name-of-current-script-in-python
 https://stackoverflow.com/questions/53434478/python-argparse-ignore-other-options-when-a-specific-option-is-used
 https://stackoverflow.com/questions/6609956/python-function-argument-list-formatting
+https://stackoverflow.com/questions/2730643/how-to-execute-programs-in-the-same-directory-as-the-windows-batch-file 
+https://stackoverflow.com/questions/11269338/how-to-comment-out-add-comment-in-a-batch-cmd
+https://stackoverflow.com/questions/21772060/batch-file-try-catch
+https://linuxize.com/post/bash-comments/
+https://stackoverflow.com/questions/3349105/how-can-i-set-the-current-working-directory-to-the-directory-of-the-script-in-ba
+https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
+https://stackoverflow.com/questions/8967902/why-do-you-need-to-put-bin-bash-at-the-beginning-of-a-script-file

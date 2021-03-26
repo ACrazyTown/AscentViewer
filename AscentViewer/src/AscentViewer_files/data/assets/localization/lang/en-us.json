@@ -43,7 +43,7 @@
         {
             "yes": "Yes",
             "no": "No",
-            "dontShowAgain": "Do not show this again."
+            "doNotShowAgain": "Do not show this again."
         },
         "fileDialogs":
         {
@@ -59,7 +59,7 @@
         },
         "statusBar":
         {
-            "greetMessageBeginning": "Succesfully loaded, version:"
+            "greetMessageBeginning": "Successfully loaded, version:"
         },
         "aboutWindow":
         {

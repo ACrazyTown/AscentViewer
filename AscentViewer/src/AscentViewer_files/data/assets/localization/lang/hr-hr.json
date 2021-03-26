@@ -43,7 +43,7 @@
         {
             "yes": "Da",
             "no": "Ne",
-            "dontShowAgain": "Više ne prikazujte ovo."
+            "doNotShowAgain": "Više ne prikazujte ovo."
         },
         "fileDialogs":
         {

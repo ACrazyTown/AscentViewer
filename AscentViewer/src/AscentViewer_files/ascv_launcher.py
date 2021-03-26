@@ -43,7 +43,7 @@ def customExceptHook(exctype, value, traceback):
         sys.__excepthook__(exctype, value, traceback)
 sys.excepthook = customExceptHook
 
-# FIX USAGE!
+# NOTE: finish the "usage" argument
 parser = argparse.ArgumentParser(
     description="This is the AscentViewer launcher script.",
     epilog="Thanks for using AscentViewer!",
@@ -55,18 +55,22 @@ parser.add_argument("-m", "--minimal", help="open the minimal AscentViewer inste
 args = parser.parse_args()
 
 if args.version:
-    with open("AscentViewer_files/data/assets/version_info.txt", "r") as f:
+    with open("data/assets/version_info.txt", "r") as f:
         ver = f.read().replace("\n", "")
 
     print(f"AscentViewer version : {ver}")
     parser.exit()
 
+pyLocation = "ascv_"
+
 if args.minimal:
-    pyLocation = "AscentViewer_files/ascv_minimal.py"
-    pycLocation = "AscentViewer_files/ascv_minimal.pyc"
+    pyLocation += "minimal"
 else:
-    pyLocation = "AscentViewer_files/ascv_main.py"
-    pycLocation = "AscentViewer_files/ascv_main.pyc"
+    pyLocation += "main"
+
+pyLocation += ".py"
+
+pycLocation = pyLocation + "c"
 
 print("Compiling AscentViewer...")
 py_compile.compile(pyLocation, pycLocation) # from https://stackoverflow.com/a/5607315/14558305

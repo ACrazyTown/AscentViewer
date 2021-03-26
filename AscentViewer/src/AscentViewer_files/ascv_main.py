@@ -36,30 +36,10 @@ from PIL import Image, ImageFont
 from pkg_resources import get_distribution
 import pyautogui
 
+from lib.logging_extras.SBHandler import StatusBarHandler
+
 date_format = "%d-%m-%Y %H:%M:%S"
-date_format_file = "%d%m%Y_%H%M%S" # for log files
-
-# from http://pantburk.info/?blog=77 and https://dzone.com/articles/python-custom-logging-handler-example
-class StatusBarHandler(logging.StreamHandler):
-    def __init__(self, statusBar):
-        '''
-        The custom logging handler for the QStatusBar.
-        '''
-        logging.Handler.__init__(self)
-        self.statusBar = statusBar
-
-    def emit(self, record):
-        self.statusBar.showMessage(self.format(record))
-
-        if record.levelname == "WARNING":
-            self.statusBar.setStyleSheet("background: #EBCB8B; color: black;")
-        elif record.levelname == "ERROR":
-            self.statusBar.setStyleSheet("background: #D08770; color: black;")
-        elif record.levelname == "CRITICAL":
-            self.statusBar.setStyleSheet("background: #BF616A;")
-
-    def flush(self):
-        pass
+date_format_file = "%d%m%Y_%H%M%S"
 
 class InMemoryLogHandler(logging.StreamHandler):
     def __init__(self):
@@ -652,7 +632,7 @@ class MainUi(QtWidgets.QMainWindow):
             buttonN = reply.button(QtWidgets.QMessageBox.No)
             buttonN.setText(localization["mainUIElements"]["commonQMessageBoxStrings"]["no"])
 
-            checkbox = QtWidgets.QCheckBox(localization["mainUIElements"]["commonQMessageBoxStrings"]["dontShowAgain"])
+            checkbox = QtWidgets.QCheckBox(localization["mainUIElements"]["commonQMessageBoxStrings"]["doNotShowAgain"])
             icon = QtGui.QPixmap("data/assets/img/door_small.png")
             reply.setIconPixmap(QtGui.QPixmap(icon))
             reply.setCheckBox(checkbox)
