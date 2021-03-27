@@ -34,7 +34,6 @@ import sys
 
 import pyautogui
 from PIL import Image, ImageFont
-from pkg_resources import get_distribution
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from lib.gui.logging.SBHandler import StatusBarHandler
@@ -1147,7 +1146,8 @@ class MainUi(QtWidgets.QMainWindow):
             about.label_9.setText(_translate("Form", "unknown"))
         about.label_2.setText(_translate("Form", localization["mainUIElements"]["aboutWindow"]["PyQtVersion"]))
         try:
-            about.label_10.setText(_translate("Form", get_distribution("PyQt5").version))
+            # from https://wiki.python.org/moin/PyQt/Getting%20the%20version%20numbers%20of%20Qt%2C%20SIP%20and%20PyQt
+            about.label_10.setText(_translate("Form", QtCore.PYQT_VERSION_STR)) 
         except:
             about.label_10.setText(_translate("Form", "unknown"))
         # from https://stackoverflow.com/a/8369345/14558305

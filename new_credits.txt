@@ -209,6 +209,7 @@ https://stackoverflow.com/questions/1523427/what-is-the-common-header-format-of-
 https://stackoverflow.com/questions/4042905/what-is-main-py
 https://stackoverflow.com/questions/31327762/what-is-the-difference-between-init-py-and-main-py
 https://code.visualstudio.com/docs/python/editing
+https://wiki.python.org/moin/PyQt/Getting%20the%20version%20numbers%20of%20Qt%2C%20SIP%20and%20PyQt
 
 other things:
 https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails/2920001
