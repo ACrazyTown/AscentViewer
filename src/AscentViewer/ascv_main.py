@@ -130,7 +130,7 @@ class MainUi(QtWidgets.QMainWindow):
             # from https://stackoverflow.com/a/44044110/14558305
             self.label.setStyleSheet("""color: white; 
                                         background: qradialgradient(cx:0.5, cy:0.5, radius: 2.5, fx:0.5, fy:0.5, stop:0 #2E3440, stop:1 black);""")
-        self.label.setMinimumSize(16, 16)
+        self.label.setMinimumSize(32, 32)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         mainLabelFont = QtGui.QFont("Selawik", 12)
         #mainLabelFont.setBold(True)
@@ -374,7 +374,7 @@ class MainUi(QtWidgets.QMainWindow):
         self.splitter.setObjectName("MainSplitter")
         self.splitter.addWidget(self.label)
         self.splitter.addWidget(self.bottom)
-        #self.splitter.setCollapsible(1, False)
+        self.splitter.setCollapsible(0, False)
         self.splitter.setStretchFactor(0, 1)
         self.splitter.setSizes([1, config["windowProperties"]["bottomSplitterPanelH"]])
 
