@@ -1,8 +1,8 @@
 .vscode
 .pytest_cache
 *.pyc
-AscentViewer/src/.vs
-AscentViewer/src/.vscode
+src/.vs
+src/.vscode
 tests_and_stuff
 log*.log
 output.*
@@ -11,5 +11,5 @@ releaser/exports
 releaser/config/config3.1 - Copy.json
 releaser/exporter.zip
 releaser/test.txt
-AscentViewer/src/AscentViewer_files/data/assets/localization/lang/secret.json
-AscentViewer/src/AscentViewer_files/data/user/temp/thumbnails/tn_current-thumb.png
+src/AscentViewer/data/assets/localization/lang/secret.json
+src/AscentViewer/data/user/temp/thumbnails/tn_current-thumb.png

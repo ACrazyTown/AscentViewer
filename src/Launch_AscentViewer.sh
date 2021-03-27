@@ -34,5 +34,5 @@ if ! command -v python3 &> /dev/null
 then
     echo "python3 could not be found, please make sure python3 is in PATH"
 else
-    python3 ./AscentViewer_files
+    python3 ./AscentViewer
 fi
