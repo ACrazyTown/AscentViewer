@@ -1,1 +1,1 @@
-Used https://icoconvert.com/
+The .png icon was converted to .ico using https://icoconvert.com/

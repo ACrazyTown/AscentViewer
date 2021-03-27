@@ -8,6 +8,7 @@ log*.log
 output.*
 releaser/logs/log*.log
 releaser/exports
+releaser/testing
 releaser/config/config3.1 - Copy.json
 releaser/exporter.zip
 releaser/test.txt
