@@ -28,11 +28,11 @@
 # and https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script
 # and https://stackoverflow.com/questions/8967902/why-do-you-need-to-put-bin-bash-at-the-beginning-of-a-script-file
 
-cd "$(dirname "$0")/AscentViewer_files/"
+cd "$(dirname "$0")"
 
 if ! command -v python3 &> /dev/null
 then
     echo "python3 could not be found, please make sure python3 is in PATH"
 else
-    python3 ./ascv_launcher.py
+    python3 ./AscentViewer_files
 fi

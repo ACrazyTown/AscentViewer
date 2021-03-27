@@ -43,6 +43,7 @@
         {
             "yes": "Yes",
             "no": "No",
+            "ok": "OK",
             "doNotShowAgain": "Do not show this again."
         },
         "fileDialogs":

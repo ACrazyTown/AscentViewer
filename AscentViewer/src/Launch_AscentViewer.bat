@@ -27,7 +27,7 @@
 
 ::if %ERRORLEVEL% neq 0 goto ProcessError
 
-py "%~dp0\AscentViewer_files\ascv_launcher.py"
+py "%~dp0\AscentViewer_files"
 
 :::ProcessError
 ::python "%~dp0\AscentViewer_files\ascv_launcher.py"

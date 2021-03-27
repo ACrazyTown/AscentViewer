@@ -20,24 +20,24 @@
 # Thank you for using and/or checking out AscentViewer!
 # =====================================================
 
-import sys
+import datetime
+import glob
 import json
+import logging
 import os
 import platform
-import signal
-import glob
-import shutil
-import datetime
 import random
-import logging
 import re
+import shutil
+import signal
+import sys
 
-from PyQt5 import QtGui, QtCore, QtWidgets
+import pyautogui
 from PIL import Image, ImageFont
 from pkg_resources import get_distribution
-import pyautogui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
-from lib.logging_extras.SBHandler import StatusBarHandler
+from lib.gui.logging.SBHandler import StatusBarHandler
 
 date_format = "%d-%m-%Y %H:%M:%S"
 date_format_file = "%d%m%Y_%H%M%S"
@@ -71,10 +71,10 @@ class MainUi(QtWidgets.QMainWindow):
         self.dirPath = ""
         self.imgFilePath = ""
         self.saveConfigOnExit = True
-        sys.excepthook = self.except_hook # https://stackoverflow.com/a/33741755/14558305
+        sys.excepthook = self.customExceptHook # https://stackoverflow.com/a/33741755/14558305
 
         # from http://pantburk.info/?blog=77. This code allows the status bar to show warning messages from loggers
-        vStatusBarHandler = StatusBarHandler(self.statusBar())
+        vStatusBarHandler = StatusBarHandler(self.statusBar(), config["theme"]["accentColorMain"])
         vStatusBarHandler.setLevel(logging.WARN)
 
         formatter = logging.Formatter("%(levelname)s: %(message)s")
@@ -145,7 +145,7 @@ class MainUi(QtWidgets.QMainWindow):
         with open(f"data/assets/html/{lang}/welcome.html") as f:
             # from https://stackoverflow.com/a/8369345/14558305
             welcome = f.read()
-            self.label.setText(welcome + pickedChoice)
+            self.label.setText(f"{welcome}<p>{pickedChoice}</p>")
         # from https://stackoverflow.com/a/37865172/14558305 and https://doc.qt.io/archives/qt-4.8/qlabel.html#linkActivated
         self.label.linkActivated.connect(self.simulateMenuOpen)
         #self.label.linkActivated("https://b").connect(self.openDir)
@@ -711,10 +711,9 @@ class MainUi(QtWidgets.QMainWindow):
                 self.blur_effect.setEnabled(False)
 
     # from https://stackoverflow.com/a/33741755/14558305
-    def except_hook(self, cls, exception, traceback):
-        # custom except hook
+    def customExceptHook(self, exctype, exception, traceback):
         ascvLogger.critical(f"An exception occurred: \"{exception}\" | Saving settings in case of a fatal issue...")
-        sys.__excepthook__(cls, exception, traceback)
+        sys.__excepthook__(exctype, exception, traceback)
         self.onCloseActions()
 
     def dummyExceptionFunc(self):
@@ -1183,8 +1182,9 @@ if __name__ == "__main__":
     except:
         pass
 
-    with open("data/assets/version_info.txt", "r") as f:
-        ver = f.read().replace("\n", "")
+    with open("manifest.json", encoding="utf-8") as f:
+        manifest = json.load(f)
+        ver = manifest["version"]
 
     config = json.load(open("data/user/config.json", encoding="utf-8")) # using json instead of QSettings, for now
     lang = config["localization"]["lang"]

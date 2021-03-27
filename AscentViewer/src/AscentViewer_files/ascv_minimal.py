@@ -20,13 +20,13 @@
 # Thank you for using and/or checking out AscentViewer!
 # =====================================================
 
-import sys
+import glob
 import os
 import platform
 import signal
-import glob
+import sys
 
-from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class MainUi(QtWidgets.QMainWindow):
     def __init__(self):
@@ -40,7 +40,7 @@ class MainUi(QtWidgets.QMainWindow):
 
         self.dirPath = ""
         self.imgFilePath = ""
-        sys.excepthook = self.except_hook # from https://stackoverflow.com/a/33741755/14558305
+        sys.excepthook = self.customExceptHook # from https://stackoverflow.com/a/33741755/14558305
 
         # =====================================================
         # gui related stuff:
@@ -256,7 +256,7 @@ class MainUi(QtWidgets.QMainWindow):
         self.updateFunction(0)
 
     # from https://stackoverflow.com/a/33741755/14558305
-    def except_hook(self, cls, exception, traceback):
+    def customExceptHook(self, cls, exception, traceback):
         # custom except hook
         sys.__excepthook__(cls, exception, traceback)
         self.onCloseActions()

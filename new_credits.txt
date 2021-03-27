@@ -200,3 +200,18 @@ https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-f
 https://stackoverflow.com/questions/8967902/why-do-you-need-to-put-bin-bash-at-the-beginning-of-a-script-file
 https://stackoverflow.com/questions/5214578/print-string-to-text-file
 https://stackoverflow.com/questions/46746537/json-force-every-opening-curly-brace-to-appear-in-a-new-separate-line
+https://docs.python.org/3/library/tkinter.messagebox.html
+https://pythonspot.com/tk-message-box/
+https://stackoverflow.com/questions/17280637/tkinter-messagebox-without-window
+https://github.com/qutebrowser/qutebrowser/blob/master/qutebrowser/__init__.py
+https://github.com/qutebrowser/qutebrowser/blob/master/qutebrowser/__main__.py
+https://stackoverflow.com/questions/1523427/what-is-the-common-header-format-of-python-files
+https://stackoverflow.com/questions/4042905/what-is-main-py
+https://stackoverflow.com/questions/31327762/what-is-the-difference-between-init-py-and-main-py
+https://code.visualstudio.com/docs/python/editing
+
+other things:
+https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails/2920001
+https://stackoverflow.com/questions/9597410/list-all-developers-on-a-project-in-git
+https://stackoverflow.com/questions/2954477/how-to-find-commits-by-a-specific-user-in-git
+https://stackoverflow.com/questions/7663451/view-a-specific-git-commit
