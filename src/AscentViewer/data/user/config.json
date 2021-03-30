@@ -10,11 +10,13 @@
     "theme":
     {
         "name": "AscentedNordDark",
-        "style": "Fusion",
-        "accentColorMain": "#777cc1",
-        "accentColorDarker": "#525685",
-        "accentColorLighter": "#a3a8e6",
-        "accentColorIsALightColor": false
+        "accentColors": {
+            "accentColorMain": "#777cc1",
+            "accentColorDarker": "#525685",
+            "accentColorLighter": "#a3a8e6",
+            "accentColorLightest": "#B9BCE6",
+            "accentColorIsALightColor": false
+        }
     },
     "localization":
     {

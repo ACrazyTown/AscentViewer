@@ -32,11 +32,13 @@ import shutil
 import signal
 import sys
 
+import jstyleson
 import pyautogui
 from PIL import Image, ImageFont
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from lib.gui.logging.SBHandler import StatusBarHandler
+from lib.gui.logging.SB_handler import StatusBarHandler
+import lib.gui.themes.theme_assist as theme_assist
 
 date_format = "%d-%m-%Y %H:%M:%S"
 date_format_file = "%d%m%Y_%H%M%S"
@@ -73,7 +75,7 @@ class MainUi(QtWidgets.QMainWindow):
         sys.excepthook = self.customExceptHook # https://stackoverflow.com/a/33741755/14558305
 
         # from http://pantburk.info/?blog=77. This code allows the status bar to show warning messages from loggers
-        vStatusBarHandler = StatusBarHandler(self.statusBar(), config["theme"]["accentColorMain"])
+        vStatusBarHandler = StatusBarHandler(self.statusBar(), config["theme"]["accentColors"]["accentColorMain"])
         vStatusBarHandler.setLevel(logging.WARN)
 
         formatter = logging.Formatter("%(levelname)s: %(message)s")
@@ -128,7 +130,7 @@ class MainUi(QtWidgets.QMainWindow):
         self.label.setObjectName("MainImageLabel")
         if config["experimental"]["enableExperimentalUI"]:
             # from https://stackoverflow.com/a/44044110/14558305
-            self.label.setStyleSheet("""color: white; 
+            self.label.setStyleSheet("""color: white;
                                         background: qradialgradient(cx:0.5, cy:0.5, radius: 2.5, fx:0.5, fy:0.5, stop:0 #2E3440, stop:1 black);""")
         self.label.setMinimumSize(32, 32)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
@@ -137,14 +139,14 @@ class MainUi(QtWidgets.QMainWindow):
         self.label.setFont(mainLabelFont)
 
         # from https://stackoverflow.com/a/29740172/14558305
-        with open(f"data/assets/funfacts/funfacts_{lang}.txt") as f:
+        with open(f"data/assets/funfacts/funfacts_{lang}.txt", "r", encoding="utf-8") as f:
             funFacts = [x.rstrip() for x in f]
 
         pickedChoice = random.choice(funFacts)
-        with open(f"data/assets/html/{lang}/welcome.html") as f:
+        with open(f"data/assets/html/{lang}/welcome.html", "r", encoding="utf-8") as f:
             # from https://stackoverflow.com/a/8369345/14558305
             welcome = f.read()
-            self.label.setText(f"{welcome}<p>{pickedChoice}</p>")
+        self.label.setText(f"{welcome}<p>{pickedChoice}</p>")
         # from https://stackoverflow.com/a/37865172/14558305 and https://doc.qt.io/archives/qt-4.8/qlabel.html#linkActivated
         self.label.linkActivated.connect(self.simulateMenuOpen)
         #self.label.linkActivated("https://b").connect(self.openDir)
@@ -250,7 +252,7 @@ class MainUi(QtWidgets.QMainWindow):
         helpMenu.addAction(aboutButton)
 
         self.bottomMenu = QtWidgets.QMenu()
-        
+
         self.bottomButtonCopyDetails = QtWidgets.QAction("&Copy details", self)
         self.bottomButtonCopyDetails.triggered.connect(self.bottomCopyFunc)
         self.bottomButtonCopyDetails.setEnabled(False)
@@ -304,7 +306,7 @@ class MainUi(QtWidgets.QMainWindow):
         self.bottom.setMinimumHeight(90)
         self.bottom.setMaximumHeight(200)
         self.bottom.setContentsMargins(0, 0, 0, 0)
-        
+
         if config["experimental"]["enableExperimentalUI"]:
             # from https://stackoverflow.com/q/45840527/14558305 (yes, the question)
             self.bottom.setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 #525685, stop: 1 #3c3f61)")
@@ -320,7 +322,7 @@ class MainUi(QtWidgets.QMainWindow):
         self.detailsFileIcon.setPixmap(icon)
 
         self.fileLabel = QtWidgets.QLabel()
-        self.fileLabel.setStyleSheet("color: white;")
+        #self.fileLabel.setStyleSheet("color: white;")
         self.fileLabel.setAttribute(QtCore.Qt.WA_NoSystemBackground)
         fileLabelFont = QtGui.QFont("Selawik", 14)
         fileLabelFont.setBold(True)
@@ -328,11 +330,11 @@ class MainUi(QtWidgets.QMainWindow):
         self.fileLabel.setText(localization["mainUIElements"]["panelText"])
 
         self.dateModifiedLabel = QtWidgets.QLabel()
-        self.dateModifiedLabel.setStyleSheet("color: white;")
+        #self.dateModifiedLabel.setStyleSheet("color: white;")
         self.dateModifiedLabel.setAttribute(QtCore.Qt.WA_NoSystemBackground)
 
         self.dimensionsLabel = QtWidgets.QLabel()
-        self.dimensionsLabel.setStyleSheet("color: white;")
+        #self.dimensionsLabel.setStyleSheet("color: white;")
         self.dimensionsLabel.setAttribute(QtCore.Qt.WA_NoSystemBackground)
 
         self.fileLabel.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
@@ -453,11 +455,10 @@ class MainUi(QtWidgets.QMainWindow):
                 self.imWidth, imHeight = im.size
                 imName = os.path.basename(self.imgFilePath)
 
-                imThumb = im
-                imThumb.thumbnail((500, 500))
+                im.thumbnail((500, 500))
                 #self.imTOut = f"data/user/temp/thumbnails/tn_{os.path.splitext(imName)[0]}.png"
                 self.imTOut = "data/user/temp/thumbnails/tn_current-thumb.png"
-                imThumb.save(self.imTOut, "PNG")
+                im.save(self.imTOut, "PNG")
 
                 pixmap_ = QtGui.QPixmap(self.imTOut)
                 pixmap = pixmap_.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
@@ -849,7 +850,7 @@ class MainUi(QtWidgets.QMainWindow):
         mainVBox.addWidget(buttonHBoxFrame)
 
         logViewer.show()
-    
+
     def logTextEditChangeMode(self):
         if self.logViewerCheckbox.isChecked():
             self.logTextEdit.setReadOnly(True)
@@ -888,9 +889,9 @@ class MainUi(QtWidgets.QMainWindow):
         programName.setFont(font)
 
         helpTitle = QtWidgets.QLabel("Help")
+        helpTitle.setObjectName("HelpTitle")
         font = QtGui.QFont("Selawik Semilight", 26)
         helpTitle.setFont(font)
-        helpTitle.setStyleSheet("color: rgba(255, 255, 255, 0.5);") # from https://www.w3schools.com/cssref/css3_pr_opacity.asp
 
         spacer = QtWidgets.QSpacerItem(2, 0, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
 
@@ -898,7 +899,7 @@ class MainUi(QtWidgets.QMainWindow):
         textView = QtWidgets.QTextBrowser()
 
         # from https://stackoverflow.com/a/8369345/14558305
-        with open(f"data/assets/html/{lang}/help.html", "r") as f:
+        with open(f"data/assets/html/{lang}/help.html", "r", encoding="utf-8") as f:
             data = f.read()
 
         textView.setOpenExternalLinks(True)
@@ -1147,13 +1148,13 @@ class MainUi(QtWidgets.QMainWindow):
         about.label_2.setText(_translate("Form", localization["mainUIElements"]["aboutWindow"]["PyQtVersion"]))
         try:
             # from https://wiki.python.org/moin/PyQt/Getting%20the%20version%20numbers%20of%20Qt%2C%20SIP%20and%20PyQt
-            about.label_10.setText(_translate("Form", QtCore.PYQT_VERSION_STR)) 
+            about.label_10.setText(_translate("Form", QtCore.PYQT_VERSION_STR))
         except:
             about.label_10.setText(_translate("Form", "unknown"))
         # from https://stackoverflow.com/a/8369345/14558305
         with open(f"data/assets/html/{lang}/about.html", "r") as f:
             desc = f.read()
-            about.label_11.setText(_translate("Form", desc))
+        about.label_11.setText(_translate("Form", desc))
         about.label_4.setText(_translate("Form", "<a href=\"https://github.com/despawnedd/AscentViewer/\">{}</a>").format(localization["mainUIElements"]["aboutWindow"]["GitHubLink"])) # thanks to Anthony for .format
         about.label_6.setText(_translate("Form", "<a href=\"https://dd.acrazytown.com/AscentViewer/\">{}</a>").format(localization["mainUIElements"]["aboutWindow"]["website"]))
 
@@ -1184,11 +1185,11 @@ if __name__ == "__main__":
 
     with open("manifest.json", encoding="utf-8") as f:
         manifest = json.load(f)
-        ver = manifest["version"]
+    ver = manifest["version"]
 
-    config = json.load(open("data/user/config.json", encoding="utf-8")) # using json instead of QSettings, for now
+    config = json.load(open("data/user/config.json", "r", encoding="utf-8")) # using json instead of QSettings, for now
     lang = config["localization"]["lang"]
-    localization = json.load(open(f"data/assets/localization/lang/{lang}.json", encoding="utf-8"))
+    localization = json.load(open(f"data/assets/localization/lang/{lang}.json", "r", encoding="utf-8"))
 
     # If this causes issues, disable deleting logs on startup.
     print("Deleting logs on statup is ", end="")
@@ -1223,8 +1224,8 @@ if __name__ == "__main__":
 
     ascvLogger.addHandler(vInMemoryLogHandler)
 
+    logIntroLine = "="*20 + "[ BEGIN LOG ]" + "="*20
     with open(logfile, "a") as f: # this code is a bit messy but all this does is just write the same thing both to the console and the logfile
-        logIntroLine = "="*20 + "[ BEGIN LOG ]" + "="*20
         f.write(f"{logIntroLine}\n")
     print(logIntroLine)
 
@@ -1244,35 +1245,25 @@ if __name__ == "__main__":
     else:
         ascvLogger.info(f"The OS is {platform.system()}.")
 
-    # start the actual program
     app = QtWidgets.QApplication(sys.argv)
 
-    # based on https://gist.github.com/QuantumCD/6245215 and https://www.nordtheme.com/docs/colors-and-palettes
-    app.setStyle(config["theme"]["style"])
-    dark_palette = QtGui.QPalette()
-    dark_palette.setColor(QtGui.QPalette.Window, QtGui.QColor(46, 52, 64))
-    dark_palette.setColor(QtGui.QPalette.WindowText, QtCore.Qt.white)
-    dark_palette.setColor(QtGui.QPalette.Base, QtGui.QColor(38, 43, 53)) #59, 66, 82; 34, 38, 47; 38, 43, 53
-    dark_palette.setColor(QtGui.QPalette.AlternateBase, QtGui.QColor(46, 52, 64))
-    dark_palette.setColor(QtGui.QPalette.ToolTipBase, QtCore.Qt.white)
-    dark_palette.setColor(QtGui.QPalette.ToolTipText, QtCore.Qt.white)
-    dark_palette.setColor(QtGui.QPalette.Text, QtCore.Qt.white)
-    dark_palette.setColor(QtGui.QPalette.Button, QtGui.QColor(34, 38, 47))
-    dark_palette.setColor(QtGui.QPalette.ButtonText, QtCore.Qt.white)
-    dark_palette.setColor(QtGui.QPalette.BrightText, QtGui.QColor(191, 97, 106))
-    dark_palette.setColor(QtGui.QPalette.Link, QtGui.QColor(config["theme"]["accentColorLighter"]))
-    dark_palette.setColor(QtGui.QPalette.Highlight, QtGui.QColor(config["theme"]["accentColorMain"]))
-    dark_palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.white)
-    app.setPalette(dark_palette)
+    with open("data/assets/themes/{}/manifest.json".format(config["theme"]["name"]), "r", encoding="utf-8") as f:
+        manifest = jstyleson.load(f)
 
-    with open("data/assets/themes/{}.css".format(config["theme"]["name"]), "r") as file:
-        stylesheet = file.read()
+    with open("data/assets/themes/{}/{}".format(config["theme"]["name"], manifest["themeData"]["paletteJSONLocation"]), "r", encoding="utf-8") as f:
+        palette_json = jstyleson.load(f)
 
-    stylesheet = stylesheet.replace("@accentColorMain", config["theme"]["accentColorMain"])
-    stylesheet = stylesheet.replace("@accentColorDarker", config["theme"]["accentColorDarker"])
+    with open("data/assets/themes/{}/{}".format(config["theme"]["name"], manifest["themeData"]["styleSheetLocation"]), "r", encoding="utf-8") as f:
+        old_stylesheet = f.read()
 
-    app.setStyleSheet(stylesheet)
+    # not naming things the same as in the theme_assist script to prevent confusion
+    style, palette, new_stylesheet = theme_assist.set_up_theme(manifest, old_stylesheet, palette_json, config["theme"]["accentColors"])
 
+    app.setStyle(style)
+    app.setPalette(palette)
+    app.setStyleSheet(new_stylesheet)
+
+    # start the actual program
     window = MainUi()
     window.show()
 

@@ -1,8 +1,8 @@
-/* The main AscentViewer theme, based on Nord (nordtheme.com) */
+/* The main AscentViewer theme; based on Nord (https://www.nordtheme.com/docs/colors-and-palettes) */
 
 QToolTip
 {
-    color: #ffffff;
+    color: white;
     background-color: #2a82da;
     border: 1px solid white;
 }
@@ -15,18 +15,18 @@ QMenu::item:disabled
 
 QSplitter::handle#MainSplitter
 {
-    background: @accentColorMain;
+    background: _accentColorMain;
     height: 2;
 }
 
 QFrame#Bottom
 {
-    background: @accentColorDarker;
+    background: _accentColorDarker;
 }
 
 QToolButton#BottomButton
 {
-    background: @accentColorDarker;
+    background: _accentColorDarker;
 }
 
 QToolButton::menu-indicator#BottomButton
@@ -38,5 +38,6 @@ QToolButton::menu-indicator#BottomButton
 
 QStatusBar
 {
-    background: @accentColorMain;
+    color: white;
+    background: _accentColorMain;
 }

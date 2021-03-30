@@ -210,9 +210,15 @@ https://stackoverflow.com/questions/4042905/what-is-main-py
 https://stackoverflow.com/questions/31327762/what-is-the-difference-between-init-py-and-main-py
 https://code.visualstudio.com/docs/python/editing
 https://wiki.python.org/moin/PyQt/Getting%20the%20version%20numbers%20of%20Qt%2C%20SIP%20and%20PyQt
+https://stackoverflow.com/questions/29959191/how-to-parse-json-file-with-c-style-comments
+https://www.geeksforgeeks.org/reading-writing-text-files-python/
+https://stackoverflow.com/questions/6077675/why-am-i-seeing-typeerror-string-indices-must-be-integers
+https://stackoverflow.com/questions/988228/convert-a-string-representation-of-a-dictionary-to-a-dictionary
+https://appdividend.com/2019/05/24/how-to-check-type-of-variable-in-python-python-type-tutorial-example
 
 other things:
 https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails/2920001
 https://stackoverflow.com/questions/9597410/list-all-developers-on-a-project-in-git
 https://stackoverflow.com/questions/2954477/how-to-find-commits-by-a-specific-user-in-git
 https://stackoverflow.com/questions/7663451/view-a-specific-git-commit
+https://en.wikipedia.org/wiki/Manifest_file
