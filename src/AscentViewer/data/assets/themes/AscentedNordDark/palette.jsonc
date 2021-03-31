@@ -11,7 +11,7 @@
         "ToolTipBase": "white",
         "ToolTipText": "white",
         "Text": "#D8DEE9",
-        "Button": "#22262F", // ?
+        "Button": "#22262F",
         "ButtonText": "white",
         "BrightText": "#BF616A",
         "HighlightedText": "white"

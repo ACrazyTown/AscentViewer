@@ -9,7 +9,7 @@
     "themeData":
     {
         "style": "Fusion",
-        "paletteJSONLocation": "palette.json",
+        "paletteJSONLocation": "palette.jsonc",
         "styleSheetLocation": "style.css"
     }
 }

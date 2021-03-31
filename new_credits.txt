@@ -215,6 +215,7 @@ https://www.geeksforgeeks.org/reading-writing-text-files-python/
 https://stackoverflow.com/questions/6077675/why-am-i-seeing-typeerror-string-indices-must-be-integers
 https://stackoverflow.com/questions/988228/convert-a-string-representation-of-a-dictionary-to-a-dictionary
 https://appdividend.com/2019/05/24/how-to-check-type-of-variable-in-python-python-type-tutorial-example
+https://gist.github.com/DamianEdwards/31d2457737304ca73556
 
 other things:
 https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails/2920001

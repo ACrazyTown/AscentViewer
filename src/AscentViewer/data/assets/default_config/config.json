@@ -10,7 +10,8 @@
     "theme":
     {
         "name": "AscentedNordDark",
-        "accentColors": {
+        "accentColors":
+        {
             "accentColorMain": "#777cc1",
             "accentColorDarker": "#525685",
             "accentColorLighter": "#a3a8e6",
