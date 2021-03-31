@@ -72,7 +72,10 @@ The procedure is the same as on Windows:
 
 ### macOS
 
-Detailed instructions for macOS are coming soon
+* Install Python 3.7 or higher, either by building it from source, or by installing it with a package manager like [Homebrew](https://brew.sh). Or you could simply just install it from [Python's official website](https://python.org/downloads/).
+* Because AscentViewer relies on a few non built-in libraries, we need to install them. You can do this manually or by running `python3 pip install -r requirements.txt` (This command may differ depending on if Python is installed in PATH or not.) 
+  * **NOTE: When installing the requirements, make sure to not call `python` instead of `python3` on accident. On macOS, `python` is an old version of Python that doesn't work with AscentViewer.**
+* Run [ascv.py](source/ascv.py), either by opening it in Finder (if you installed the [Python launcher()]), or by running it from the terminal.
 
 ### Linux
 
@@ -82,7 +85,7 @@ Detailed instructions for macOS are coming soon
 * You might have to install ``qt5-default``. Again, install it by using your favourite package manager, such as apt (``sudo apt install qt5-default``).
 * Run [ascv.py](source/ascv.py) using the Python version you installed. If you installed it using a package manager (of if you have added it to PATH yourself), this can be done by running ``python3 [path to ascv.py]`` (eg. ``python3 ascv.py``) -->
 
-**tl;dr:** Install Python, and then run [AscentViewer.py](source/AscentViewer.py).
+**tl;dr:** Install Python and the requirements, and then run [AscentViewer.py](source/AscentViewer.py).
 
 <!-- * Install Python 3.7+ (make sure you install ``pip``)
 * Run ``pip install -r requirements.txt`` while in the root directory, or just manually install the required packages
