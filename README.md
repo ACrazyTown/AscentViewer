@@ -48,13 +48,10 @@ Here are the instructions for running the raw Python version:
 
 ### macOS
 
-macOS usually comes with a copy of Python but that's an old version which isn't supported.
-
-The procedure is the same as on Windows:
-
-* Download and install Python 3.7 or higher from [here](https://www.python.org/downloads/).
-* Run `python3 -m pip install -r requirements.txt`.
-* Run [AscentViewer.py](source/AscentViewer.py).
+* Install Python 3.7 or higher, either by building it from source, or by installing it with a package manager like [Homebrew](https://brew.sh). Or you could simply just install it from [Python's official website](https://python.org/downloads/).
+* Because AscentViewer relies on a few non built-in libraries, we need to install them. You can do this manually or by running `python3 pip install -r requirements.txt` (This command may differ depending on if Python is installed in PATH or not.) 
+  * **NOTE: When installing the requirements, make sure to not call `python` instead of `python3` on accident. On macOS, `python` is an old version of Python that doesn't work with AscentViewer.**
+* Run [ascv.py](source/ascv.py), either by opening it in Finder (if you installed the [Python launcher()]), or by running it from the terminal.
 
 ### Linux
 
