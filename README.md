@@ -18,7 +18,7 @@ Here is [its website](https://dd.acrazytown.com/AscentViewer/).
 
 DDIV got renamed to **AscentViewer**.
 
-The main reason for that is that the owner of the program, [DespawnedDiamond](https://github.com/despawnedd), is not the only one working on it anymore (DDIV was short for <u>*DespawnedDiamond's*</u> *Image Viewer*"), and the second reason is that "AscentViewer" just sounds better.
+The main reason for that is that the owner of the program, [DespawnedDiamond](https://github.com/despawnedd), is not the only one working on it anymore (DDIV was short for ***DespawnedDiamond's*** *Image Viewer*"), and the second reason is that "AscentViewer" just sounds better.
 
 Looking for old, pre-rename/Old Pre-release Beta code? Check out the ["pre-rename" branch.](https://github.com/despawnedd/AscentViewer/tree/pre-rename)
 
@@ -36,31 +36,37 @@ Looking for old, pre-rename/Old Pre-release Beta code? Check out the ["pre-renam
 
 ## How to run/install
 
-You can either use one of the prebuilt binaries in one of the [Releases](https://github.com/despawnedd/AscentViewer/releases), or you could run the raw Python version.
+<!-- You can either use one of the prebuilt binaries in one of the [Releases](https://github.com/despawnedd/AscentViewer/releases), or you could run the raw Python version.
 
-Here are the instructions for running the raw Python version:
+Here are the instructions for running the raw Python version: -->
 
 ### Windows
 
+**Note**:  Keep in mind that `py` requires the Python launcher to be installed. If you didn't install the launcher, you'll have to replace `py` with the direct path to the Python executable, or `python` (read the note below).
+
+**Note 2**: if you've added the Python executable to PATH (either by selecting [this](misc/markdown/img/add_to_path_win.png) when installing, or manually), you can run `python` instead of `py`, and `pip` or `python -m pip` instead of `py -m pip`.
+
 * Install Python 3.7 or higher from [here](https://www.python.org/downloads/).
-* Run `py -m pip install -r requirements.txt` (or `pip install -r requirements.txt` if you [added Python to PATH](misc/markdown/img/add_to_path_win.png))
-* Run [AscentViewer.py](source/AscentViewer.py).
+* Run `py -m pip install -r <path to requirements.txt>` to install the required pip packages.
+* Run `py <path to src/AscentViewer directory>`, or just run the [\_\_main\_\_.py]("src/AscentViewer/__main__.py") script.
 
 ### macOS
 
 * Install Python 3.7 or higher, either by building it from source, or by installing it with a package manager like [Homebrew](https://brew.sh). Or you could simply just install it from [Python's official website](https://python.org/downloads/).
-* Because AscentViewer relies on a few non built-in libraries, we need to install them. You can do this manually or by running `python3 pip install -r requirements.txt` (This command may differ depending on if Python is installed in PATH or not.)
+* Because AscentViewer relies on a few non built-in libraries, we need to install them. You can do this manually or by running `python3 -m pip install -r <path to requirements.txt>` (This command may differ depending on if Python is installed in PATH or not.)
   * **NOTE: When installing the requirements, make sure to not call `python` instead of `python3` on accident. On macOS, `python` is an old version of Python that doesn't work with AscentViewer.**
-* Run [ascv.py](source/ascv.py), either by opening it in Finder (if you installed the Python launcher), or by running it from the terminal.
+* Run `python3 <path to src/AscentViewer directory>`, or just run the [\_\_main\_\_.py]("src/AscentViewer/__main__.py") script, either by opening it in Finder (if you installed the Python launcher), or by running it from the terminal.
 
 ### Linux
 
+**Note**: If Python 3's not in PATH, replace `python3` with the direct path to Python 3.
+
 * Install Python 3.7 or higher. The recommended way to do so is by installing it using a package manager, such as apt (`apt install python3`). Note: using a package manager might require administrator access.
 * You might also have to install qt5-default (for apt, the command is `apt install qt5-default`).
-* Run `python3 -m pip install -r requirements.txt`.
-* Run [AscentViewer.py](source/AscentViewer.py).
+* Run `python3 -m pip install -r <path to requirements.txt>` if Python is in PATH (or just `pip` instead of `python3 -m pip`) to install the required pip packages.
+* Run `python3 <path to src/AscentViewer directory>`, or just run the [\_\_main\_\_.py]("src/AscentViewer/__main__.py") script.
 
-**tl;dr:** Install Python and the requirements, and then run [AscentViewer.py](source/AscentViewer.py).
+**tl;dr:** Install Python and the required `pip` packages for AscentViewer, and then run AscentViewer.
 
 ## Credits
 
