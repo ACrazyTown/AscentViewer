@@ -36,15 +36,11 @@ Looking for old, pre-rename/Old Pre-release Beta code? Check out the ["pre-renam
 
 ## How to run/install
 
-<!-- You can either use one of the prebuilt binaries in one of the [Releases](https://github.com/despawnedd/AscentViewer/releases), or you could run the raw Python version.
-
-Here are the instructions for running the raw Python version: -->
-
 ### Windows
 
-**Note**:  Keep in mind that `py` requires the Python launcher to be installed. If you didn't install the launcher, you'll have to replace `py` with the direct path to the Python executable, or `python` (read the note below).
+**Note**: Keep in mind that `py` requires the Python launcher to be installed. If you didn't install the launcher, you'll have to replace `py` with the direct path to the Python executable, or `python` (read the note below).
 
-**Note 2**: If you've added the Python 3 executable to PATH (either by selecting [this](misc/markdown/img/add_to_path_win.png) when installing, or manually), you can run `python` instead of `py`, and `pip` or `python -m pip` instead of `py -m pip`.
+**Note 2**: If you've added the Python 3 executable to PATH (either by selecting [this](misc/markdown/img/add_to_path_win.png) when installing it from the official installer, or manually), you can run `python` instead of `py`, and `pip` or `python -m pip` instead of `py -m pip`.
 
 * Install Python 3.7 or higher from [here](https://www.python.org/downloads/).
 * Run `py -m pip install -r <path to requirements.txt>` to install the required pip packages.
@@ -59,14 +55,14 @@ Here are the instructions for running the raw Python version: -->
 
 ### Linux
 
-**Note**: If Python 3's not in PATH, when running the commands mentioned in the 3rd and 4th point, replace `python3` with the direct path to Python 3.
+**Note**: If Python 3's not in PATH after you installed it, when running the commands mentioned in the 3rd and 4th point, replace `python3` with the direct path to Python 3. Or, you could just add it to PATH.
 
 * Install Python 3.7 or higher. The recommended way to do so is by installing it using a package manager, such as `apt` (`apt install python3`). Note: using a package manager might require administrator access (which can be granted with `sudo` or something similar).
 * You might also have to install `qt5-default` (for apt, the command is `apt install qt5-default`).
 * Run `python3 -m pip install -r <path to requirements.txt>` if Python is in PATH (or just `pip` instead of `python3 -m pip`) to install the required pip packages.
 * Run `python3 <path to src/AscentViewer directory>`, or just run the [\_\_main\_\_.py]("src/AscentViewer/__main__.py") script.
 
-**tl;dr:** Install Python and the required `pip` packages for AscentViewer, and then run AscentViewer.
+**tl;dr:** Install Python 3.7 or higher, install the required `pip` packages for AscentViewer, and then run AscentViewer.
 
 ## Credits
 
