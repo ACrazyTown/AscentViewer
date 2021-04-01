@@ -55,9 +55,9 @@ Install Python 3.7 or higher, install the required `pip` packages for AscentView
 #### macOS
 
 * Install Python 3.7 or higher, either by building it from source, or by installing it with a package manager like [Homebrew](https://brew.sh). Or you could simply just install it from [Python's official website](https://python.org/downloads/).
-* Because AscentViewer relies on a few non built-in libraries, we need to install them. You can do this manually or by running `python3 -m pip install -r <path to requirements.txt>` (This command may differ depending on if Python has been added to PATH or not.)
+* Because AscentViewer relies on a few non built-in libraries, we need to install them. You can do this manually or by running `python3 -m pip install -r <path to requirements.txt>` (This command may differ depending on if Python has been added to PATH or not).
   * **NOTE: When installing the requirements, make sure to not call `python` instead of `python3` on accident. On macOS, `python` is an old version of Python that doesn't work with AscentViewer.**
-* Run `python3 <path to src/AscentViewer directory>`, or just run the [\_\_main\_\_.py]("src/AscentViewer/__main__.py") script, either by opening it in Finder (if you installed the Python launcher), or by running it from the terminal.
+* Run `python3 <path to src/AscentViewer directory>`, or just run the [\_\_main\_\_.py]("src/AscentViewer/__main__.py") script, either by opening it in Finder (if you installed the Python launcher), or by running it from the terminal. Maybe the [bash launcher script](src/Launch_AscentViewer.sh) works too?
 
 #### Linux
 
