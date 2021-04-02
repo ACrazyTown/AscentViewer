@@ -1,4 +1,4 @@
 PyQt5~=5.15.4
-Pillow~=8.1.2
+Pillow~=8.2.0
 PyAutoGUI~=0.9.52
 jstyleson~=0.0.2
