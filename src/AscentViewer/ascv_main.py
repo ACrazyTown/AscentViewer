@@ -31,17 +31,47 @@ import re
 import shutil
 import signal
 import sys
+import time
 
 import jstyleson
 import pyautogui
-from PIL import Image, ImageFont
+from PIL import Image, ImageQt
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from lib.gui.logging.SB_handler import StatusBarHandler
 import lib.gui.themes.theme_assist as theme_assist
 
 date_format = "%d-%m-%Y %H:%M:%S"
 date_format_file = "%d%m%Y_%H%M%S"
+
+class StatusBarHandler(logging.StreamHandler):
+    def __init__(self, statusBar, ac):
+        '''
+        The custom logging handler for the QStatusBar.
+        '''
+        logging.Handler.__init__(self)
+        self.statusBar = statusBar
+        self.accentColor = ac
+
+        self.timer = QtCore.QTimer()
+
+    def emit(self, record):
+        if record.levelname == "WARNING":
+            self.statusBar.setStyleSheet("background: #EBCB8B; color: black;")
+        elif record.levelname == "ERROR" or record.levelname == "CRITICAL":
+            self.statusBar.setStyleSheet("background: #D08770; color: #181B21;")
+
+        self.statusBar.showMessage(self.format(record), 5000)
+        self.timer.timeout.connect(self.timerEnd)
+
+        if self.timer.isActive() == False:
+            self.timer.start(5000)
+
+    def timerEnd(self):
+        # a temporary solution
+        self.statusBar.setStyleSheet(f"background: {self.accentColor};")
+
+    def flush(self):
+        pass
 
 class InMemoryLogHandler(logging.StreamHandler):
     def __init__(self):
@@ -126,17 +156,61 @@ class MainUi(QtWidgets.QMainWindow):
         vBox = QtWidgets.QVBoxLayout(self.mainWidget)
         vBox.setContentsMargins(0, 0, 0, 0)
 
+        self.mainGridFrame = QtWidgets.QFrame()
+        self.mainGrid = QtWidgets.QGridLayout(self.mainGridFrame)
+        self.mainGrid.setContentsMargins(0, 0, 0, 0)
+
+        vBox.addWidget(self.mainGridFrame)
+
         self.label = QtWidgets.QLabel()
         self.label.setObjectName("MainImageLabel")
-        if config["experimental"]["enableExperimentalUI"]:
-            # from https://stackoverflow.com/a/44044110/14558305
-            self.label.setStyleSheet("""color: white;
-                                        background: qradialgradient(cx:0.5, cy:0.5, radius: 2.5, fx:0.5, fy:0.5, stop:0 #2E3440, stop:1 black);""")
         self.label.setMinimumSize(32, 32)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         mainLabelFont = QtGui.QFont("Selawik", 12)
-        #mainLabelFont.setBold(True)
         self.label.setFont(mainLabelFont)
+
+        self.mainGrid.addWidget(self.label, 0, 0)
+
+        self.mainArrowHBoxFrame = QtWidgets.QFrame()
+        mainArrowHBox = QtWidgets.QHBoxLayout(self.mainArrowHBoxFrame)
+        mainArrowHBox.setContentsMargins(0, 0, 0, 0)
+
+        leftArrowPixmap = QtGui.QPixmap("data/assets/img/arrow.png")
+        leftArrowPixmapIcon = QtGui.QIcon(leftArrowPixmap)
+
+        arrowPixmapSize = leftArrowPixmap.rect().size()
+
+        leftArrowButton = QtWidgets.QPushButton()
+        leftArrowButton.setObjectName("arrowButtons")
+        leftArrowButton.setFixedSize(75, 185)
+        leftArrowButton.setIcon(leftArrowPixmapIcon)
+        leftArrowButton.setIconSize(arrowPixmapSize)
+        leftArrowButton.clicked.connect(self.prevImage)
+
+        leftArrowVBox = QtWidgets.QVBoxLayout()
+        leftArrowVBox.setContentsMargins(0, 0, 0, 0)
+        leftArrowVBox.setAlignment(QtCore.Qt.AlignLeft)
+        leftArrowVBox.addWidget(leftArrowButton)
+
+        mainArrowHBox.addLayout(leftArrowVBox)
+
+
+        rightArrowPixmap = leftArrowPixmap.transformed(QtGui.QTransform().scale(-1, 1))
+        rightArrowPixmapIcon = QtGui.QIcon(rightArrowPixmap)
+
+        rightArrowButton = QtWidgets.QPushButton()
+        rightArrowButton.setObjectName("arrowButtons")
+        rightArrowButton.setFixedSize(75, 185)
+        rightArrowButton.setIcon(rightArrowPixmapIcon)
+        rightArrowButton.setIconSize(arrowPixmapSize)
+        rightArrowButton.clicked.connect(self.nextImage)
+
+        rightArrowVBox = QtWidgets.QVBoxLayout()
+        rightArrowVBox.setContentsMargins(0, 0, 0, 0)
+        rightArrowVBox.setAlignment(QtCore.Qt.AlignRight)
+        rightArrowVBox.addWidget(rightArrowButton)
+
+        mainArrowHBox.addLayout(rightArrowVBox)
 
         # from https://stackoverflow.com/a/29740172/14558305
         with open(f"data/assets/funfacts/funfacts_{lang}.txt", "r", encoding="utf-8") as f:
@@ -161,8 +235,6 @@ class MainUi(QtWidgets.QMainWindow):
             debugMenu = mainMenu.addMenu(localization["mainUIElements"]["menuBar"]["debug"]["title"])
         helpMenu = mainMenu.addMenu(localization["mainUIElements"]["menuBar"]["help"]["title"])
 
-        # "QtGui.QIcon("data/assets/img/empty_16x16.png")" is an empty 16x16 icon. It's used to fixed weird menu paddings. It's a wonky workaround, though.
-
         openImgButton = QtWidgets.QAction(QtGui.QIcon("data/assets/img/file.png"), localization["mainUIElements"]["menuBar"]["file"]["openImgText"], self)
         openImgButton.setShortcut("CTRL+O")
         openImgButton.setStatusTip("Open an image file")
@@ -178,36 +250,36 @@ class MainUi(QtWidgets.QMainWindow):
         exitButton.setStatusTip("Exit application")
         exitButton.triggered.connect(self.close)
 
-        settingsButton = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), localization["mainUIElements"]["menuBar"]["edit"]["settings"], self)
+        settingsButton = QtWidgets.QAction(localization["mainUIElements"]["menuBar"]["edit"]["settings"], self)
         settingsButton.setShortcut("CTRL+SHIFT+E")
         settingsButton.setStatusTip("Open the settings window")
         settingsButton.triggered.connect(self.openSettingsWin)
         settingsButton.setEnabled(False)
 
-        self.navButtonBack = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), localization["mainUIElements"]["menuBar"]["navigation"]["back"], self)
+        self.navButtonBack = QtWidgets.QAction(localization["mainUIElements"]["menuBar"]["navigation"]["back"], self)
         self.navButtonBack.setShortcut("Left")
         self.navButtonBack.setStatusTip("Go to previous image in directory")
         self.navButtonBack.triggered.connect(self.prevImage)
         self.navButtonBack.setEnabled(False)
 
-        self.navButtonForw = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), localization["mainUIElements"]["menuBar"]["navigation"]["forw"], self)
+        self.navButtonForw = QtWidgets.QAction(localization["mainUIElements"]["menuBar"]["navigation"]["forw"], self)
         self.navButtonForw.setShortcut("Right")
         self.navButtonForw.setStatusTip("Go to next image in directory")
         self.navButtonForw.triggered.connect(self.nextImage)
         self.navButtonForw.setEnabled(False)
 
         if config["debug"]["enableDebugMenu"]:
-            logWindowButton = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "Log Viewer", self)
+            logWindowButton = QtWidgets.QAction("Log Viewer", self)
             logWindowButton.setShortcut("CTRL+Shift+L")
             logWindowButton.setStatusTip("Open the log viewer window.")
             logWindowButton.triggered.connect(self.openLogWin)
 
-            dummyException = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "Raise dummy exception", self)
+            dummyException = QtWidgets.QAction("Raise dummy exception", self)
             dummyException.setShortcut("CTRL+Shift+F10")
             dummyException.setStatusTip("Raise a dummy exception")
             dummyException.triggered.connect(self.dummyExceptionFunc)
 
-        resetCfg = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), localization["mainUIElements"]["menuBar"]["tools"]["resetConfig"], self)
+        resetCfg = QtWidgets.QAction(localization["mainUIElements"]["menuBar"]["tools"]["resetConfig"], self)
         resetCfg.setShortcut("CTRL+Shift+F9")
         resetCfg.setStatusTip("Reset the configuration file.")
         resetCfg.triggered.connect(self.resetConfigDialog)
@@ -238,7 +310,14 @@ class MainUi(QtWidgets.QMainWindow):
 
         toolsMenu.addAction(resetCfg)
 
+        self.copyImage = QtWidgets.QAction("Copy &image (from original source)", self)
+        self.copyImage.triggered.connect(self.copyImageFunc)
+        self.copyImage.setEnabled(False)
+
         self.menuBarCompactMenu = QtWidgets.QMenu()
+
+        self.menuBarCompactMenu.addAction(self.copyImage)
+        self.menuBarCompactMenu.addSeparator()
         self.menuBarCompactMenu.addMenu(fileMenu)
         self.menuBarCompactMenu.addMenu(editMenu)
         self.menuBarCompactMenu.addMenu(navMenu)
@@ -257,27 +336,28 @@ class MainUi(QtWidgets.QMainWindow):
         self.bottomButtonCopyDetails.triggered.connect(self.bottomCopyFunc)
         self.bottomButtonCopyDetails.setEnabled(False)
 
+        self.bottomMenu.addAction(self.copyImage)
         self.bottomMenu.addAction(self.bottomButtonCopyDetails)
         self.bottomMenu.addSeparator()
 
-        bottomButtonSizeMenu = self.bottomMenu.addMenu(QtGui.QIcon("data/assets/img/empty_16x16.png"), "Details Panel &size")
+        bottomButtonSizeMenu = self.bottomMenu.addMenu("Details Panel &size")
 
         # NOTE: https://stackoverflow.com/a/48501804/14558305
         size90 = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"),"&Small (90) (Default)", self)
         size90.triggered.connect(lambda state, h=90: self.bottomChangeSizeFunc(h))
 
-        size130 = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "&Medium-sized (130)", self)
+        size130 = QtWidgets.QAction("&Medium-sized (130)", self)
         size130.triggered.connect(lambda state, h=130: self.bottomChangeSizeFunc(h))
 
-        size160 = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "&Large (160)", self)
+        size160 = QtWidgets.QAction("&Large (160)", self)
         size160.triggered.connect(lambda state, h=160: self.bottomChangeSizeFunc(h))
 
-        size200 = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "&Huge (200)", self)
+        size200 = QtWidgets.QAction("&Huge (200)", self)
         size200.triggered.connect(lambda state, h=200: self.bottomChangeSizeFunc(h))
 
         bottomButtonSizeMenu.addActions([size90, size130, size160, size200])
 
-        bottomButtonColumnSettings = QtWidgets.QAction(QtGui.QIcon("data/assets/img/empty_16x16.png"), "Details Panel column &settings", self)
+        bottomButtonColumnSettings = QtWidgets.QAction("Details Panel column s&ettings", self)
         bottomButtonColumnSettings.triggered.connect(self.bottomColumnSettings)
 
         bottomButtonAccentColorSettings = QtWidgets.QAction("&Accent color settings", self)
@@ -293,7 +373,6 @@ class MainUi(QtWidgets.QMainWindow):
         bottomButton.setMenu(self.bottomMenu)
         bottomButton.setPopupMode(QtWidgets.QToolButton.InstantPopup)
         bottomButton.setFixedSize(20, 20)
-        bottomButton.setAttribute(QtCore.Qt.WA_NoSystemBackground)
 
         bottomButtonVBoxFrame = QtWidgets.QFrame()
         bottomButtonVBox = QtWidgets.QVBoxLayout(bottomButtonVBoxFrame)
@@ -307,42 +386,29 @@ class MainUi(QtWidgets.QMainWindow):
         self.bottom.setMaximumHeight(200)
         self.bottom.setContentsMargins(0, 0, 0, 0)
 
-        if config["experimental"]["enableExperimentalUI"]:
-            # from https://stackoverflow.com/q/45840527/14558305 (yes, the question)
-            self.bottom.setStyleSheet("background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0 #525685, stop: 1 #3c3f61)")
-
         btHBox = QtWidgets.QHBoxLayout(self.bottom)
 
         self.detailsFileIcon = QtWidgets.QLabel()
         self.detailsFileIcon.setFixedSize(60, 60)
         self.detailsFileIcon.setScaledContents(True)
-        # from https://stackoverflow.com/a/51401997/14558305
-        self.detailsFileIcon.setAttribute(QtCore.Qt.WA_NoSystemBackground)
         icon = QtGui.QPixmap("data/assets/img/file.png")
         self.detailsFileIcon.setPixmap(icon)
 
         self.fileLabel = QtWidgets.QLabel()
-        #self.fileLabel.setStyleSheet("color: white;")
-        self.fileLabel.setAttribute(QtCore.Qt.WA_NoSystemBackground)
         fileLabelFont = QtGui.QFont("Selawik", 14)
         fileLabelFont.setBold(True)
         self.fileLabel.setFont(fileLabelFont)
         self.fileLabel.setText(localization["mainUIElements"]["panelText"])
 
         self.dateModifiedLabel = QtWidgets.QLabel()
-        #self.dateModifiedLabel.setStyleSheet("color: white;")
-        self.dateModifiedLabel.setAttribute(QtCore.Qt.WA_NoSystemBackground)
 
         self.dimensionsLabel = QtWidgets.QLabel()
-        #self.dimensionsLabel.setStyleSheet("color: white;")
-        self.dimensionsLabel.setAttribute(QtCore.Qt.WA_NoSystemBackground)
 
         self.fileLabel.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
         self.dateModifiedLabel.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
         self.dimensionsLabel.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
 
         btFileInfoVBox1Frame = QtWidgets.QFrame()
-        btFileInfoVBox1Frame.setAttribute(QtCore.Qt.WA_NoSystemBackground)
         btFileInfoVBox1 = QtWidgets.QVBoxLayout(btFileInfoVBox1Frame)
         btFileInfoVBox1.setContentsMargins(0, 0, 0, 0)
         btFileInfoVBox1.setAlignment(QtCore.Qt.AlignLeft)
@@ -350,14 +416,12 @@ class MainUi(QtWidgets.QMainWindow):
         btFileInfoVBox1.addWidget(self.dimensionsLabel)
 
         btFileInfoContainerHBoxFrame = QtWidgets.QFrame() # A really long name, I know
-        btFileInfoContainerHBoxFrame.setAttribute(QtCore.Qt.WA_NoSystemBackground)
         btFileInfoContainerHBox = QtWidgets.QHBoxLayout(btFileInfoContainerHBoxFrame)
         btFileInfoContainerHBox.setContentsMargins(0, 0, 0, 0)
         btFileInfoContainerHBox.setAlignment(QtCore.Qt.AlignLeft)
         btFileInfoContainerHBox.addWidget(btFileInfoVBox1Frame)
 
         btMainVBoxFrame = QtWidgets.QFrame()
-        btMainVBoxFrame.setAttribute(QtCore.Qt.WA_NoSystemBackground)
         btMainVBox = QtWidgets.QVBoxLayout(btMainVBoxFrame)
         btMainVBox.setAlignment(QtCore.Qt.AlignTop)
         btMainVBox.setContentsMargins(0, 0, 0, 0)
@@ -372,22 +436,27 @@ class MainUi(QtWidgets.QMainWindow):
         btHBox.addItem(bottomSpacer)
         btHBox.addWidget(bottomButtonVBoxFrame)
 
-        self.splitter = QtWidgets.QSplitter(QtCore.Qt.Vertical)
-        self.splitter.setObjectName("MainSplitter")
-        self.splitter.addWidget(self.label)
-        self.splitter.addWidget(self.bottom)
-        self.splitter.setCollapsible(0, False)
-        self.splitter.setStretchFactor(0, 1)
-        self.splitter.setSizes([1, config["windowProperties"]["bottomSplitterPanelH"]])
-
-        vBox.addWidget(self.splitter)
+        if config["experimental"]["enableExperimentalUI"]:
+            self.bottomDockWidget = QtWidgets.QDockWidget("Info Panel", self)
+            self.bottomDockWidget.setWidget(self.bottom)
+            self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.bottomDockWidget)
+            vBox.addWidget(self.mainGridFrame)
+        else:
+            self.splitter = QtWidgets.QSplitter(QtCore.Qt.Vertical)
+            self.splitter.setObjectName("MainSplitter")
+            self.splitter.addWidget(self.mainGridFrame)
+            self.splitter.addWidget(self.bottom)
+            self.splitter.setCollapsible(0, False)
+            self.splitter.setStretchFactor(0, 1)
+            self.splitter.setSizes([1, config["windowProperties"]["bottomSplitterPanelH"]])
+            vBox.addWidget(self.splitter)
 
         # from https://stackoverflow.com/a/4839906/14558305
         self.bottom.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.bottom.customContextMenuRequested.connect(self.bottomOnContextMenu)
 
-        self.label.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.label.customContextMenuRequested.connect(self.labelOnContextMenu)
+        self.mainGridFrame.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.mainGridFrame.customContextMenuRequested.connect(self.mainGridOnContextMenu)
 
         # from https://pythonpyqt.com/qtimer/
         self.timer = QtCore.QTimer()
@@ -396,17 +465,18 @@ class MainUi(QtWidgets.QMainWindow):
         # from https://stackoverflow.com/a/34802367/14558305
         self.label.resizeEvent = (lambda old_method: (lambda event: (self.updateFunction(1), old_method(event))[-1]))(self.label.resizeEvent)
 
+        self.cb = QtWidgets.QApplication.clipboard()
+
         self.statusBar().showMessage("{} {}".format(localization["mainUIElements"]["statusBar"]["greetMessageBeginning"], ver))
 
-        #self.setStyleSheet(stylesheet)
         ascvLogger.info("GUI has been initialized.")
 
     # from https://stackoverflow.com/a/4839906/14558305
     def bottomOnContextMenu(self, point):
         self.bottomMenu.exec_(self.bottom.mapToGlobal(point))
 
-    def labelOnContextMenu(self, point):
-        self.menuBarCompactMenu.exec_(self.label.mapToGlobal(point))
+    def mainGridOnContextMenu(self, point):
+        self.menuBarCompactMenu.exec_(self.mainGridFrame.mapToGlobal(point))
 
     def simulateMenuOpen(self):
         # from https://stackoverflow.com/a/34056847/14558305 and https://pyautogui.readthedocs.io/en/latest/keyboard.html
@@ -414,8 +484,7 @@ class MainUi(QtWidgets.QMainWindow):
         pyautogui.hotkey("alt", "f")
 
     def bottomCopyFunc(self, height):
-        details = ""
-        details += self.fileLabel.text()
+        details = self.fileLabel.text()
         details += "\n\n"
         details += self.dateModifiedLabel.text()
         details += "\n"
@@ -427,12 +496,14 @@ class MainUi(QtWidgets.QMainWindow):
             details = details.replace(c, "")
 
         # thanks to https://stackoverflow.com/a/23119741/14558305
-        cb = QtWidgets.QApplication.clipboard()
-        cb.clear(mode=cb.Clipboard )
-        cb.setText(details, mode=cb.Clipboard)
+        self.cb.clear(mode=self.cb.Clipboard )
+        self.cb.setText(details, mode=self.cb.Clipboard)
 
     def bottomChangeSizeFunc(self, height):
         self.splitter.setSizes([1, height])
+
+    def copyImageFunc(self):
+        self.cb.setImage(QtGui.QImage(self.imgFilePath)) # NOTE: change this
 
     # the foundation of the code comes from https://stackoverflow.com/a/43570124/14558305
     def updateFunction(self, i):
@@ -445,50 +516,35 @@ class MainUi(QtWidgets.QMainWindow):
 
         if self.imgFilePath != "":
             if i == 0:
-                # i == 0: set up things, update image to high quality image
-
-                # should probably not use Pillow for this, might change this later
-                # from https://stackoverflow.com/questions/6444548/how-do-i-get-the-picture-size-with-pil
-
-                # NOTE: make it so the thumbnails don't get recreated every time
-                im = Image.open(self.imgFilePath)
-                self.imWidth, imHeight = im.size
+                self.im = Image.open(self.imgFilePath)
+                imWidth, imHeight = self.im.size
                 imName = os.path.basename(self.imgFilePath)
 
-                im.thumbnail((500, 500))
-                #self.imTOut = f"data/user/temp/thumbnails/tn_{os.path.splitext(imName)[0]}.png"
-                self.imTOut = "data/user/temp/thumbnails/tn_current-thumb.png"
-                im.save(self.imTOut, "PNG")
+                self.im.thumbnail((500, 500))
 
-                pixmap_ = QtGui.QPixmap(self.imTOut)
-                pixmap = pixmap_.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-                self.label.setPixmap(pixmap)
                 dateModified = datetime.datetime.fromtimestamp(os.path.getmtime(self.imgFilePath)).strftime(date_format)
-                dimensions = f"{self.imWidth}x{imHeight}"
+                dimensions = f"{imWidth}x{imHeight}"
 
                 self.fileLabel.setText(imName)
                 self.dateModifiedLabel.setText(f"<b>Date modified:</b> {dateModified}")
                 self.dimensionsLabel.setText(f"<b>Dimensions:</b> {dimensions}")
 
-                pixmap_ = QtGui.QPixmap(self.imgFilePath)
-                pixmap = pixmap_.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-                self.label.setPixmap(pixmap)
+                self.pixmap_2 = QtGui.QPixmap(self.imgFilePath)
+
+                self.qimagething = ImageQt.ImageQt(self.im)
+                self.pixmap_ = QtGui.QPixmap.fromImage(self.qimagething)
+
+                self.updateFunction(1)
+
             elif i == 1:
-                # i == 1: low quality resize
+                self.timer.stop()
+                self.timer.start(250)
 
-                # WARNING: this makes the timer start again after it times out while resizing an image. This calls the updateTimerFunc function again,
-                # which then swaps out the actual image with the thumbnail every time. This goes unnoticed, however, but STILL, I should *probably*
-                # fix that somehow.
-                if self.timer.isActive() == False:
-                    self.timer.start(250)
-
-                pixmap_ = QtGui.QPixmap(self.imTOut)
-                pixmap = pixmap_.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio)
+                pixmap = self.pixmap_.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio)
                 self.label.setPixmap(pixmap)
 
     def updateTimerFunc(self):
-        pixmap_ = QtGui.QPixmap(self.imgFilePath)
-        pixmap = pixmap_.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+        pixmap = self.pixmap_2.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
         self.label.setPixmap(pixmap)
         self.timer.stop()
 
@@ -573,10 +629,12 @@ class MainUi(QtWidgets.QMainWindow):
 
             self.imgFilePath = self.dirImageList[self.imageNumber]
 
-            self.updateFunction(0)
+            self.mainGrid.addWidget(self.mainArrowHBoxFrame, 0, 0)
             self.navButtonBack.setEnabled(True)
             self.navButtonForw.setEnabled(True)
+            self.copyImage.setEnabled(True)
             self.bottomButtonCopyDetails.setEnabled(True)
+            self.updateFunction(0)
         else:
             ascvLogger.info(f"Successfully created dirImageList_, but it's empty! Not setting dirImageList to dirImageList_")
 
@@ -921,218 +979,18 @@ class MainUi(QtWidgets.QMainWindow):
 
         helpWin.show()
 
+        # from https://stackoverflow.com/a/8369345/14558305
+        with open(f"data/assets/html/{lang}/help.html", "r", encoding="utf-8") as f:
+            data = f.read()
+
+        textView.setText(data)
+
+        helpWin.exec_()
+
     def openAboutWin(self):
-        about = QtWidgets.QDialog(self, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
-
-        # =====================================================
-        # This code below is a modified version of about.py (located in the misc folder,
-        # that's located in the source folder of the repository), a script that was generated by pyuic5.
-        # That is why the entire thing is big and clunky.
-
+        about.__init__(self, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
+        about.setLayout(about.gridLayout)
         about.resize(900, 502)
-        about.setObjectName("about")
-        about.setModal(True)
-        about.gridLayout = QtWidgets.QGridLayout(about)
-        about.gridLayout.setContentsMargins(0, 0, 0, 0)
-        about.gridLayout.setObjectName("gridLayout")
-        about.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        about.horizontalLayout_3.setContentsMargins(9, 9, 9, 9)
-        about.horizontalLayout_3.setSpacing(9)
-        about.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        about.verticalLayout_4 = QtWidgets.QVBoxLayout()
-        about.verticalLayout_4.setObjectName("verticalLayout_4")
-        about.image = QtWidgets.QLabel(about)
-        about.image.setFixedSize(300, 300)
-        about.image.setPixmap(QtGui.QPixmap("data/assets/img/icon3.png"))
-        about.image.setScaledContents(True)
-        about.image.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        about.image.setWordWrap(False)
-        about.image.setObjectName("image")
-        about.verticalLayout_4.addWidget(about.image, 0, QtCore.Qt.AlignTop)
-        about.horizontalLayout_3.addLayout(about.verticalLayout_4)
-        about.widget = QtWidgets.QWidget(about)
-        about.widget.setObjectName("widget")
-        about.verticalLayout_3 = QtWidgets.QVBoxLayout(about.widget)
-        about.verticalLayout_3.setSpacing(4)
-        about.verticalLayout_3.setObjectName("verticalLayout_3")
-        about.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        about.horizontalLayout_5.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
-        about.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        about.programName = QtWidgets.QLabel(about.widget)
-        font = QtGui.QFont()
-        font.setFamily("Selawik")
-        font.setPointSize(36)
-        font.setBold(True)
-        font.setWeight(75)
-        #font.setStyleStrategy(QtGui.QFont.NoSubpixelAntialias | QtGui.QFont.PreferAntialias);
-        about.programName.setFont(font)
-        about.programName.setTextFormat(QtCore.Qt.PlainText)
-        about.programName.setScaledContents(False)
-        about.programName.setObjectName("programName")
-        about.horizontalLayout_5.addWidget(about.programName)
-        spacerItem = QtWidgets.QSpacerItem(8, 0, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        about.horizontalLayout_5.addItem(spacerItem)
-        about.majorReleaseName = QtWidgets.QLabel(about.widget)
-        font = QtGui.QFont()
-        font.setFamily("Selawik Semilight")
-        font.setPointSize(36)
-        about.majorReleaseName.setFont(font)
-        about.majorReleaseName.setStyleSheet("color: #8FBCBB;")
-        about.majorReleaseName.setTextFormat(QtCore.Qt.PlainText)
-        about.majorReleaseName.setObjectName("majorReleaseName")
-        about.horizontalLayout_5.addWidget(about.majorReleaseName)
-        about.horizontalLayout_5.setStretch(2, 1)
-        about.verticalLayout_3.addLayout(about.horizontalLayout_5)
-        about.horizontalLayout_8 = QtWidgets.QHBoxLayout()
-        about.horizontalLayout_8.setObjectName("horizontalLayout_8")
-        about.versionLabel = QtWidgets.QLabel(about.widget)
-        font = QtGui.QFont()
-        font.setFamily("Selawik Semilight")
-        font.setPointSize(20)
-        about.versionLabel.setFont(font)
-        about.versionLabel.setObjectName("versionLabel")
-        about.horizontalLayout_8.addWidget(about.versionLabel)
-        spacerItem1 = QtWidgets.QSpacerItem(2, 0, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        about.horizontalLayout_8.addItem(spacerItem1)
-        about.version = QtWidgets.QLabel(about.widget)
-        font = QtGui.QFont()
-        font.setFamily("Selawik Light")
-        font.setPointSize(20)
-        font.setBold(False)
-        font.setWeight(50)
-        about.version.setFont(font)
-        about.version.setStyleSheet("color: #8FBCBB;")
-        about.version.setTextFormat(QtCore.Qt.RichText)
-        about.version.setObjectName("version")
-        about.horizontalLayout_8.addWidget(about.version)
-        about.horizontalLayout_8.setStretch(2, 1)
-        about.verticalLayout_3.addLayout(about.horizontalLayout_8)
-        about.line = QtWidgets.QFrame(about.widget)
-        about.line.setMinimumSize(QtCore.QSize(0, 22))
-        about.line.setStyleSheet("color: #4C566A;")
-        about.line.setFrameShadow(QtWidgets.QFrame.Plain)
-        about.line.setFrameShape(QtWidgets.QFrame.HLine)
-        about.line.setObjectName("line")
-        about.verticalLayout_3.addWidget(about.line)
-        about.verticalLayout_5 = QtWidgets.QVBoxLayout()
-        about.verticalLayout_5.setContentsMargins(-1, 0, -1, -1)
-        about.verticalLayout_5.setSpacing(4)
-        about.verticalLayout_5.setObjectName("verticalLayout_5")
-        about.horizontalLayout = QtWidgets.QHBoxLayout()
-        about.horizontalLayout.setObjectName("horizontalLayout")
-        about.label = QtWidgets.QLabel(about.widget)
-        font = QtGui.QFont()
-        font.setFamily("Selawik")
-        font.setPointSize(14)
-        about.label.setFont(font)
-        about.label.setTextFormat(QtCore.Qt.PlainText)
-        about.label.setObjectName("label")
-        about.horizontalLayout.addWidget(about.label)
-        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        about.horizontalLayout.addItem(spacerItem2)
-        about.label_9 = QtWidgets.QLabel(about.widget)
-        font = QtGui.QFont()
-        font.setFamily("Selawik")
-        font.setPointSize(14)
-        about.label_9.setFont(font)
-        about.label_9.setTextFormat(QtCore.Qt.PlainText)
-        about.label_9.setObjectName("label_9")
-        about.horizontalLayout.addWidget(about.label_9)
-        about.verticalLayout_5.addLayout(about.horizontalLayout)
-        about.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        about.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        about.label_2 = QtWidgets.QLabel(about.widget)
-        font = QtGui.QFont()
-        font.setFamily("Selawik")
-        font.setPointSize(14)
-        about.label_2.setFont(font)
-        about.label_2.setTextFormat(QtCore.Qt.PlainText)
-        about.label_2.setObjectName("label_2")
-        about.horizontalLayout_2.addWidget(about.label_2)
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        about.horizontalLayout_2.addItem(spacerItem3)
-        about.label_10 = QtWidgets.QLabel(about.widget)
-        font = QtGui.QFont()
-        font.setFamily("Selawik")
-        font.setPointSize(14)
-        about.label_10.setFont(font)
-        about.label_10.setTextFormat(QtCore.Qt.PlainText)
-        about.label_10.setObjectName("label_10")
-        about.horizontalLayout_2.addWidget(about.label_10)
-        about.verticalLayout_5.addLayout(about.horizontalLayout_2)
-        about.verticalLayout_3.addLayout(about.verticalLayout_5)
-        about.line_2 = QtWidgets.QFrame(about.widget)
-        about.line_2.setMinimumSize(QtCore.QSize(0, 22))
-        about.line_2.setStyleSheet("color: #4C566A;")
-        about.line_2.setFrameShadow(QtWidgets.QFrame.Plain)
-        about.line_2.setFrameShape(QtWidgets.QFrame.HLine)
-        about.line_2.setObjectName("line_2")
-        about.verticalLayout_3.addWidget(about.line_2)
-        about.label_11 = QtWidgets.QLabel(about.widget)
-        font = QtGui.QFont()
-        font.setFamily("Selawik")
-        font.setPointSize(12)
-        about.label_11.setFont(font)
-        about.label_11.setTextFormat(QtCore.Qt.MarkdownText)
-        about.label_11.setScaledContents(False)
-        about.label_11.setWordWrap(True)
-        about.label_11.setIndent(-1)
-        about.label_11.setOpenExternalLinks(True)
-        about.label_11.setObjectName("label_11")
-        about.verticalLayout_3.addWidget(about.label_11)
-        about.horizontalLayout_3.addWidget(about.widget, 0, QtCore.Qt.AlignTop)
-        about.horizontalLayout_3.setStretch(1, 1)
-        about.gridLayout.addLayout(about.horizontalLayout_3, 0, 0, 1, 1)
-        about.verticalWidget = QtWidgets.QWidget(about)
-        about.verticalWidget.setMaximumSize(QtCore.QSize(16777215, 96))
-        about.verticalWidget.setStyleSheet("background:#3B4252;")
-        about.verticalWidget.setObjectName("verticalWidget")
-        about.verticalLayout_7 = QtWidgets.QVBoxLayout(about.verticalWidget)
-        about.verticalLayout_7.setObjectName("verticalLayout_7")
-        about.horizontalLayout_4 = QtWidgets.QHBoxLayout()
-        about.horizontalLayout_4.setContentsMargins(24, 24, 24, 24)
-        about.horizontalLayout_4.setSpacing(24)
-        about.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        about.widget1 = QtWidgets.QWidget(about.verticalWidget)
-        about.widget1.setObjectName("widget1")
-        about.horizontalLayout_7 = QtWidgets.QHBoxLayout(about.widget1)
-        about.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        about.label_5 = QtWidgets.QLabel(about.widget1)
-        about.label_5.setFixedSize(16, 16)
-        about.label_5.setTextFormat(QtCore.Qt.PlainText)
-        about.label_5.setPixmap(QtGui.QPixmap("data/assets/img/GitHub-Mark/PNG/GitHub-Mark-Light-32px.png"))
-        about.label_5.setScaledContents(True)
-        about.label_5.setObjectName("label_5")
-        about.horizontalLayout_7.addWidget(about.label_5)
-        about.label_4 = QtWidgets.QLabel(about.widget1)
-        about.label_4.setMinimumSize(QtCore.QSize(16, 16))
-        about.label_4.setTextFormat(QtCore.Qt.RichText)
-        about.label_4.setScaledContents(False)
-        about.label_4.setOpenExternalLinks(True)
-        about.label_4.setObjectName("label_4")
-        about.horizontalLayout_7.addWidget(about.label_4)
-        about.horizontalLayout_4.addWidget(about.widget1, 0, QtCore.Qt.AlignHCenter)
-        about.widget2 = QtWidgets.QWidget(about.verticalWidget)
-        about.widget2.setObjectName("widget2")
-        about.horizontalLayout_6 = QtWidgets.QHBoxLayout(about.widget2)
-        about.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        about.label_3 = QtWidgets.QLabel(about.widget2)
-        about.label_3.setFixedSize(16, 16)
-        about.label_3.setTextFormat(QtCore.Qt.PlainText)
-        about.label_3.setPixmap(QtGui.QPixmap("data/assets/img/Material-Icons/public-white-18dp/1x/baseline_public_white_18dp.png"))
-        about.label_3.setScaledContents(True)
-        about.label_3.setObjectName("label_3")
-        about.horizontalLayout_6.addWidget(about.label_3)
-        about.label_6 = QtWidgets.QLabel(about.widget2)
-        about.label_6.setMinimumSize(QtCore.QSize(16, 16))
-        about.label_6.setTextFormat(QtCore.Qt.RichText)
-        about.label_6.setScaledContents(False)
-        about.label_6.setOpenExternalLinks(True)
-        about.label_6.setObjectName("label_6")
-        about.horizontalLayout_6.addWidget(about.label_6)
-        about.horizontalLayout_4.addWidget(about.widget2, 0, QtCore.Qt.AlignHCenter)
-        about.verticalLayout_7.addLayout(about.horizontalLayout_4)
-        about.gridLayout.addWidget(about.verticalWidget, 1, 0, 1, 1)
 
         _translate = QtCore.QCoreApplication.translate
         about.setWindowTitle(_translate("Form", localization["mainUIElements"]["aboutWindow"]["title"]))
@@ -1187,7 +1045,11 @@ if __name__ == "__main__":
         manifest = json.load(f)
     ver = manifest["version"]
 
-    config = json.load(open("data/user/config.json", "r", encoding="utf-8")) # using json instead of QSettings, for now
+    configPath = "data/user/config.json"
+    if os.path.isfile(configPath) != True:
+        shutil.copyfile("data/assets/default_config/config.json", "data/user/config.json")
+
+    config = json.load(open(configPath, "r", encoding="utf-8")) # using json instead of QSettings, for now
     lang = config["localization"]["lang"]
     localization = json.load(open(f"data/assets/localization/lang/{lang}.json", "r", encoding="utf-8"))
 
@@ -1215,7 +1077,8 @@ if __name__ == "__main__":
 
     ascvLogger = logging.getLogger("Main logger")
     stderrLogger = logging.getLogger("stderr logger")
-    sys.stderr = StreamToLogger(stderrLogger, logging.ERROR)
+    if sys.executable.endswith("pythonw.exe") != True:
+        sys.stderr = StreamToLogger(stderrLogger, logging.ERROR)
 
     # from http://pantburk.info/?blog=77
     vInMemoryLogHandler = InMemoryLogHandler()
@@ -1262,6 +1125,8 @@ if __name__ == "__main__":
     app.setStyle(style)
     app.setPalette(palette)
     app.setStyleSheet(new_stylesheet)
+
+    from lib.gui.other_windows.about import *
 
     # start the actual program
     window = MainUi()

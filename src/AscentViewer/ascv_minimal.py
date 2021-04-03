@@ -25,7 +25,9 @@ import os
 import platform
 import signal
 import sys
+import json
 
+from PIL import Image, ImageQt
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class MainUi(QtWidgets.QMainWindow):
@@ -133,7 +135,7 @@ class MainUi(QtWidgets.QMainWindow):
 
         # from https://stackoverflow.com/a/4839906/14558305
         self.label.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.label.customContextMenuRequested.connect(self.labelOnContextMenu)
+        self.label.customContextMenuRequested.connect(self.mainGridOnContextMenu)
 
         # from https://pythonpyqt.com/qtimer/
         self.timer = QtCore.QTimer()
@@ -145,8 +147,10 @@ class MainUi(QtWidgets.QMainWindow):
         self.statusBar().showMessage(f"Successfully loaded, version: {ver}")
 
     # from https://stackoverflow.com/a/4839906/14558305
-    def labelOnContextMenu(self, point):
+    def mainGridOnContextMenu(self, point):
         self.menuBarCompactMenu.exec_(self.label.mapToGlobal(point))
+
+    # the foundation of the code comes from https://stackoverflow.com/a/43570124/14558305
 
     # the foundation of the code comes from https://stackoverflow.com/a/43570124/14558305
     def updateFunction(self, i):
@@ -159,22 +163,28 @@ class MainUi(QtWidgets.QMainWindow):
 
         if self.imgFilePath != "":
             if i == 0:
-                # i == 0: set up things, update image to high quality image
-                pixmap_ = QtGui.QPixmap(self.imgFilePath)
-                pixmap = pixmap_.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
-                self.label.setPixmap(pixmap)
-            elif i == 1:
-                # i == 1: low quality resize
-                if self.timer.isActive() == False:
-                    self.timer.start(250)
+                self.im = Image.open(self.imgFilePath)
+                imWidth, imHeight = self.im.size
+                imName = os.path.basename(self.imgFilePath)
 
-                pixmap_ = QtGui.QPixmap(self.imgFilePath)
-                pixmap = pixmap_.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio)
+                self.im.thumbnail((500, 500))
+
+                self.pixmap_2 = QtGui.QPixmap(self.imgFilePath)
+
+                self.qimagething = ImageQt.ImageQt(self.im)
+                self.pixmap_ = QtGui.QPixmap.fromImage(self.qimagething)
+
+                self.updateFunction(1)
+
+            elif i == 1:
+                self.timer.stop()
+                self.timer.start(250)
+
+                pixmap = self.pixmap_.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio)
                 self.label.setPixmap(pixmap)
 
     def updateTimerFunc(self):
-        pixmap_ = QtGui.QPixmap(self.imgFilePath)
-        pixmap = pixmap_.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+        pixmap = self.pixmap_2.scaled(self.mwWidth, self.mwHeight, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
         self.label.setPixmap(pixmap)
         self.timer.stop()
 
@@ -328,8 +338,9 @@ if __name__ == "__main__":
     except:
         pass
 
-    with open("data/assets/version_info.txt", "r") as f:
-        ver = f.read().replace("\n", "")
+    with open("manifest.json", encoding="utf-8") as f:
+        manifest = json.load(f)
+    ver = manifest["version"]
 
     # start the actual program
     app = QtWidgets.QApplication(sys.argv)

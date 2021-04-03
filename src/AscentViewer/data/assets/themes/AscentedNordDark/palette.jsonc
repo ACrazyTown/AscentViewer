@@ -5,12 +5,12 @@
     {
         // "Link" and "Highlight" are not present here because those two colors are stored in the config.json file.
         "Window": "#2E3440",
-        "WindowText": "#D8DEE9",
+        "WindowText": "#E5E9F0",
         "Base": "#262B35",
         "AlternateBase": "#2E3440",
-        "ToolTipBase": "white",
-        "ToolTipText": "white",
-        "Text": "#D8DEE9",
+        "ToolTipBase": "#2E3440",
+        "ToolTipText": "#E5E9F0",
+        "Text": "#E5E9F0",
         "Button": "#22262F",
         "ButtonText": "white",
         "BrightText": "#BF616A",

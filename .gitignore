@@ -13,4 +13,6 @@ releaser/config/config3.1 - Copy.json
 releaser/exporter.zip
 releaser/test.txt
 src/AscentViewer/data/assets/localization/lang/secret.json
-src/AscentViewer/data/user/temp/thumbnails/tn_current-thumb.png
+src/AscentViewer/data/user/config.json
+src/AscentViewer.zip
+src/AscentViewer_moving-things-around.zip

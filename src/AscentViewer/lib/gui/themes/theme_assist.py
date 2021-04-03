@@ -55,7 +55,6 @@ def set_up_theme(json_manifest, css_qss_stylesheet, json_palette, dict_accentCol
     new_stylesheet = new_stylesheet.replace("_accentColorLightest", dict_accentColors["accentColorLightest"])
 
     style = json_manifest["themeData"]["style"]
-    print(style)
 
     return style, palette, new_stylesheet
 

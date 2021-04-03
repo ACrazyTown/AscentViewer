@@ -9,8 +9,28 @@ QToolTip
 
 QMenu::item:disabled
 {
-    background-color: rgb(38, 43, 53);
-    color: #3b4252;
+    background-color: #292E39;
+    color: #4C566A;
+}
+
+QPushButton#arrowButtons
+{
+    border: none;
+}
+
+QPushButton#arrowButtons
+{ 
+    background: rgba(0, 0, 0, 0);
+}
+
+QPushButton:hover#arrowButtons
+{
+    background: rgba(0, 0, 0, 125);
+}
+
+QPushButton:pressed#arrowButtons
+{
+    background: rgba(0, 0, 0, 175);
 }
 
 QSplitter::handle#MainSplitter
@@ -40,4 +60,14 @@ QStatusBar
 {
     color: white;
     background: _accentColorMain;
+}
+
+QLabel#HelpTitle
+{
+    color: #92969D;
+}
+
+QWidget#verticalWidget
+{
+    background:#3B4252;
 }

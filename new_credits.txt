@@ -216,6 +216,18 @@ https://stackoverflow.com/questions/6077675/why-am-i-seeing-typeerror-string-ind
 https://stackoverflow.com/questions/988228/convert-a-string-representation-of-a-dictionary-to-a-dictionary
 https://appdividend.com/2019/05/24/how-to-check-type-of-variable-in-python-python-type-tutorial-example
 https://gist.github.com/DamianEdwards/31d2457737304ca73556
+https://stackoverflow.com/questions/18918496/qdockwidget-without-a-title-bar
+https://stackoverflow.com/questions/5099917/qdockwidget-draggable-tabs
+https://stackoverflow.com/questions/43956587/pyqt-how-to-create-a-dialog-as-a-child-of-another-dialog
+https://stackoverflow.com/questions/21763949/overlapping-widgets-in-qtdesigner
+https://stackoverflow.com/questions/3137805/how-to-set-image-on-qpushbutton
+https://stackoverflow.com/questions/5960994/reflect-the-qpixmap
+https://forum.qt.io/topic/113585/change-qpushbutton-opacity-on-hover-and-pressed-states/4
+https://stackoverflow.com/questions/35887237/current-screen-size-in-python3-with-pyqt5
+https://stackoverflow.com/questions/33916409/how-to-save-image-in-memory-and-upload-using-pil
+https://stackoverflow.com/questions/35655755/qpixmap-argument-1-has-unexpected-type-pngimagefile
+https://stackoverflow.com/questions/24835155/pyw-and-pythonw-does-not-run-under-windows-7
+https://stackoverflow.com/questions/82831/how-do-i-check-whether-a-file-exists-without-exceptions
 
 other things:
 https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails/2920001
