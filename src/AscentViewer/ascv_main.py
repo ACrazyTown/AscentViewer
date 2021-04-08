@@ -228,7 +228,6 @@ class MainUi(QtWidgets.QMainWindow):
         mainMenu = self.menuBar()
 
         fileMenu = mainMenu.addMenu(localization["mainUIElements"]["menuBar"]["file"]["title"])
-        editMenu = mainMenu.addMenu(localization["mainUIElements"]["menuBar"]["edit"]["title"])
         navMenu = mainMenu.addMenu(localization["mainUIElements"]["menuBar"]["navigation"]["title"])
         toolsMenu = mainMenu.addMenu(localization["mainUIElements"]["menuBar"]["tools"]["title"])
         if config["debug"]["enableDebugMenu"]:
@@ -249,12 +248,6 @@ class MainUi(QtWidgets.QMainWindow):
         exitButton.setShortcut("CTRL+Q")
         exitButton.setStatusTip("Exit application")
         exitButton.triggered.connect(self.close)
-
-        settingsButton = QtWidgets.QAction(localization["mainUIElements"]["menuBar"]["edit"]["settings"], self)
-        settingsButton.setShortcut("CTRL+SHIFT+E")
-        settingsButton.setStatusTip("Open the settings window")
-        settingsButton.triggered.connect(self.openSettingsWin)
-        settingsButton.setEnabled(False)
 
         self.navButtonBack = QtWidgets.QAction(localization["mainUIElements"]["menuBar"]["navigation"]["back"], self)
         self.navButtonBack.setShortcut("Left")
@@ -299,8 +292,6 @@ class MainUi(QtWidgets.QMainWindow):
         fileMenu.addSeparator()
         fileMenu.addAction(exitButton)
 
-        editMenu.addAction(settingsButton)
-
         navMenu.addAction(self.navButtonBack)
         navMenu.addAction(self.navButtonForw)
 
@@ -319,7 +310,6 @@ class MainUi(QtWidgets.QMainWindow):
         self.menuBarCompactMenu.addAction(self.copyImage)
         self.menuBarCompactMenu.addSeparator()
         self.menuBarCompactMenu.addMenu(fileMenu)
-        self.menuBarCompactMenu.addMenu(editMenu)
         self.menuBarCompactMenu.addMenu(navMenu)
         self.menuBarCompactMenu.addMenu(toolsMenu)
         if config["debug"]["enableDebugMenu"]:
@@ -356,16 +346,6 @@ class MainUi(QtWidgets.QMainWindow):
         size200.triggered.connect(lambda state, h=200: self.bottomChangeSizeFunc(h))
 
         bottomButtonSizeMenu.addActions([size90, size130, size160, size200])
-
-        bottomButtonColumnSettings = QtWidgets.QAction("Details Panel column s&ettings", self)
-        bottomButtonColumnSettings.triggered.connect(self.bottomColumnSettings)
-
-        bottomButtonAccentColorSettings = QtWidgets.QAction("&Accent color settings", self)
-        bottomButtonAccentColorSettings.triggered.connect(self.accentColorSettings)
-
-        self.bottomMenu.addAction(bottomButtonColumnSettings)
-        self.bottomMenu.addSeparator()
-        self.bottomMenu.addAction(bottomButtonAccentColorSettings)
 
         bottomButton = QtWidgets.QToolButton()
         bottomButton.setObjectName("BottomButton")
@@ -529,13 +509,14 @@ class MainUi(QtWidgets.QMainWindow):
                 self.dateModifiedLabel.setText(f"<b>Date modified:</b> {dateModified}")
                 self.dimensionsLabel.setText(f"<b>Dimensions:</b> {dimensions}")
 
+                self.setWindowTitle(f"AscentViewer  -  {imName}") # the double spaces are intentional
+
                 self.pixmap_2 = QtGui.QPixmap(self.imgFilePath)
 
                 self.qimagething = ImageQt.ImageQt(self.im)
                 self.pixmap_ = QtGui.QPixmap.fromImage(self.qimagething)
 
                 self.updateFunction(1)
-
             elif i == 1:
                 self.timer.stop()
                 self.timer.start(250)
@@ -776,61 +757,6 @@ class MainUi(QtWidgets.QMainWindow):
 
     def dummyExceptionFunc(self):
         raise Exception("Dummy exception!")
-
-    def bottomColumnSettings(self):
-        settings = QtWidgets.QDialog(self, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
-
-        settings.resize(350, 500)
-        geo = settings.geometry()
-        geo.moveCenter(self.geometry().center())
-        settings.setGeometry(geo)
-
-        settings.setAttribute(QtCore.Qt.WA_QuitOnClose, True)
-        settings.setModal(True)
-        settings.setWindowTitle("Columns")
-
-        settings.show()
-
-    def accentColorSettings(self):
-        acSettings = QtWidgets.QDialog(self, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
-
-        acSettings.resize(300, 200)
-        geo = acSettings.geometry()
-        geo.moveCenter(self.geometry().center())
-        acSettings.setGeometry(geo)
-
-        acSettings.setAttribute(QtCore.Qt.WA_QuitOnClose, True)
-        acSettings.setModal(True)
-        acSettings.setWindowTitle("Accent Color")
-
-        mainVBox = QtWidgets.QVBoxLayout(acSettings)
-        mainVBox.setAlignment(QtCore.Qt.AlignTop)
-
-        firstHBoxFrame = QtWidgets.QFrame()
-        firstHBox = QtWidgets.QVBoxLayout(firstHBoxFrame)
-        firstHBox.setAlignment(QtCore.Qt.AlignLeft)
-
-        secondHBoxFrame = QtWidgets.QFrame()
-        secondHBox = QtWidgets.QVBoxLayout(secondHBoxFrame)
-        secondHBox.setAlignment(QtCore.Qt.AlignLeft)
-
-        thirdHBoxFrame = QtWidgets.QFrame()
-        thirdHBox = QtWidgets.QVBoxLayout(thirdHBoxFrame)
-        thirdHBox.setAlignment(QtCore.Qt.AlignLeft)
-
-        testLabel = QtWidgets.QLabel("accentColorMain: " + config["theme"]["accentColorMain"])
-        testLabel2 = QtWidgets.QLabel("accentColorDarker: " + config["theme"]["accentColorDarker"])
-        testLabel3 = QtWidgets.QLabel("accentColorLighter: " + config["theme"]["accentColorLighter"])
-
-        firstHBox.addWidget(testLabel)
-        secondHBox.addWidget(testLabel2)
-        thirdHBox.addWidget(testLabel3)
-
-        mainVBox.addWidget(firstHBoxFrame)
-        mainVBox.addWidget(secondHBoxFrame)
-        mainVBox.addWidget(thirdHBoxFrame)
-
-        acSettings.show()
 
     def openSettingsWin(self):
         settings = QtWidgets.QDialog(self, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowCloseButtonHint)
