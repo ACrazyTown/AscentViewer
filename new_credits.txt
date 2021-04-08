@@ -237,3 +237,4 @@ https://stackoverflow.com/questions/9597410/list-all-developers-on-a-project-in-
 https://stackoverflow.com/questions/2954477/how-to-find-commits-by-a-specific-user-in-git
 https://stackoverflow.com/questions/7663451/view-a-specific-git-commit
 https://en.wikipedia.org/wiki/Manifest_file
+https://forums.getpaint.net/topic/112095-align-object/

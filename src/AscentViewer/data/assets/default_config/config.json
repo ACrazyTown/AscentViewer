@@ -32,7 +32,7 @@
         "enableDebugMenu": true,
         "logging":
         {
-            "loggingLevel": "INFO"
+            "loggingLevel": "DEBUG"
         }
     },
     "temporary_files":

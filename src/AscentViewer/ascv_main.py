@@ -543,23 +543,10 @@ class MainUi(QtWidgets.QMainWindow):
             ascvLogger.info(f"Opened image. Image path: \"{self.imgFilePath}\"")
             self.dirPath_ = self.imgFilePath.replace(os.path.basename(self.imgFilePath), "")
             ascvLogger.info(f"Image's directory path: \"{self.dirPath_}\"")
-
             ascvLogger.debug(f"dirPath: \"{self.dirPath}\", dirPath_: \"{self.dirPath_}\"")
 
-            if self.dirPath != "":
-                ascvLogger.debug("dirPath isn't blank")
-
-                if self.dirPath != self.dirPath_:
-                    ascvLogger.debug("dirPath and dirPath_ aren't the same, creating new dirImageList, and setting dirPath to dirPath_")
-                    self.dirPath = self.dirPath_
-                    self.dirMakeImageList(1)
-                else:
-                    ascvLogger.debug("dirPath and dirPath_ are the same, not creating new dirImageList")
-                    self.imageNumber = self.dirImageList.index(self.imgFilePath)
-            else:
-                ascvLogger.debug("dirPath is blank, creating dirImageList")
-                self.dirPath = self.dirPath_
-                self.dirMakeImageList(1)
+            self.dirPath = self.dirPath_
+            self.dirMakeImageList(1)
         else:
             ascvLogger.info("imgFilePath is empty!")
 
@@ -569,21 +556,10 @@ class MainUi(QtWidgets.QMainWindow):
                                                                    "/")
         if self.dirPath_ != "":
             ascvLogger.info(f"Successfully opened directory, directory path is: \"{self.dirPath_}\"")
-
             ascvLogger.debug(f"dirPath: \"{self.dirPath}\", dirPath_: \"{self.dirPath_}\"")
 
-            if self.dirPath != "":
-                ascvLogger.debug("dirPath isn't blank")
-                if self.dirPath != self.dirPath_:
-                    ascvLogger.debug("dirPath and dirPath_ aren't the same, creating new dirImageList, and setting dirPath to dirPath_")
-                    self.dirPath = self.dirPath_
-                    self.dirMakeImageList(0)
-                else:
-                    ascvLogger.debug("dirPath and dirPath_ are the same, not creating new dirImageList")
-            else:
-                ascvLogger.debug("dirPath is blank, creating dirImageList")
-                self.dirPath = self.dirPath_
-                self.dirMakeImageList(0)
+            self.dirPath = self.dirPath_
+            self.dirMakeImageList(0)
         else:
             ascvLogger.info("dirPath_ is blank!")
 
@@ -599,7 +575,6 @@ class MainUi(QtWidgets.QMainWindow):
 
         if len(self.dirImageList_) != 0:
             ascvLogger.info(f"Successfully created dirImageList_. It's not empty.")
-            ascvLogger.debug(f"dirImageList_: {self.dirImageList_}")
             ascvLogger.info(f"dirImageList_ length: {len(self.dirImageList_)}")
             ascvLogger.info(f"Setting dirImageList to dirImageList_")
 
