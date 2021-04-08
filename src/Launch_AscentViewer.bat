@@ -23,11 +23,4 @@
 :: and https://stackoverflow.com/questions/11269338/how-to-comment-out-add-comment-in-a-batch-cmd
 :: and https://stackoverflow.com/questions/21772060/batch-file-try-catch (is not currently used)
 
-:: NOTE: should probably fix the keyboardinterrupt thing
-
-::if %ERRORLEVEL% neq 0 goto ProcessError
-
 py "%~dp0\AscentViewer"
-
-:::ProcessError
-::python "%~dp0\AscentViewer_files\ascv_launcher.py"
