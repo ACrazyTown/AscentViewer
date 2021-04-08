@@ -26,13 +26,13 @@ Looking for old, pre-rename/Old Pre-release Beta code? Check out the ["pre-renam
 
 ## Screenshots
 
-![Main window screenshot](misc/examples/ascv_1.0.0_pre-release_1.png)
+![Main window screenshot](misc/examples/ascv_1.0.0_pre-release_2.png)
 
-> *AscentViewer's main window*
+> *AscentViewer's main window. (the title bar's color has been changed in Windows' settings)*
 
-![About window screenshot](misc/examples/ascv_1.0.0_pre-release_about_1.png)
+![About window screenshot](misc/examples/ascv_1.0.0_pre-release_about_2.png)
 
-> *AscentViewer's about window*
+> *AscentViewer's about window.*
 
 ## How to run/install
 
