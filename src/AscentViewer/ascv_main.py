@@ -974,7 +974,10 @@ if __name__ == "__main__":
         print("enabled, erasing all logs...")
         logs = glob.glob("data/user/temp/logs/log*.log")
         for f in logs:
-            os.remove(f)
+            try:
+                os.remove(f)
+            except:
+                pass
     else:
         print("disabled, not deleting logs.")
 
