@@ -497,6 +497,8 @@ class MainUi(QtWidgets.QMainWindow):
         if self.imgFilePath != "":
             if i == 0:
                 self.im = Image.open(self.imgFilePath)
+                self.im = self.im.convert("RGBA") # thanks to https://clay-atlas.com/us/blog/2020/10/31/pyqt5-en-valueerror-unsupported-image-mode-la/
+
                 imWidth, imHeight = self.im.size
                 imName = os.path.basename(self.imgFilePath)
 

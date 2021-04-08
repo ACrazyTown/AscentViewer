@@ -229,6 +229,7 @@ https://stackoverflow.com/questions/35655755/qpixmap-argument-1-has-unexpected-t
 https://stackoverflow.com/questions/24835155/pyw-and-pythonw-does-not-run-under-windows-7
 https://stackoverflow.com/questions/82831/how-do-i-check-whether-a-file-exists-without-exceptions
 https://doc.qt.io/qt-5/appicon.html
+https://clay-atlas.com/us/blog/2020/10/31/pyqt5-en-valueerror-unsupported-image-mode-la/
 
 other things:
 https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails/2920001
