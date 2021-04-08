@@ -12,7 +12,7 @@
         "ToolTipText": "#E5E9F0",
         "Text": "#E5E9F0",
         "Button": "#22262F",
-        "ButtonText": "white",
+        "ButtonText": "#E5E9F0",
         "BrightText": "#BF616A",
         "HighlightedText": "white"
     }

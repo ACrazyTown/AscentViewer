@@ -6,7 +6,6 @@ src/.vscode
 tests_and_stuff
 log*.log
 output.*
-releaser/logs/log*.log
 releaser/exports
 releaser/testing
 releaser/config/config3.1 - Copy.json
@@ -17,3 +16,4 @@ src/AscentViewer/data/user/config.json
 src/AscentViewer.zip
 src/AscentViewer_moving-things-around.zip
 src/stash
+src/AscentViewer/data/user

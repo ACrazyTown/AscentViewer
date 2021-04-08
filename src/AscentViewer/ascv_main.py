@@ -1045,6 +1045,18 @@ if __name__ == "__main__":
         manifest = json.load(f)
     ver = manifest["version"]
 
+    userDirPath = "data/user"
+    if os.path.isdir(userDirPath) != True:
+        os.mkdir(userDirPath)
+
+    tempDirPath = "data/user/temp/"
+    if os.path.isdir(tempDirPath) != True:
+        os.mkdir(tempDirPath)
+
+    logDirPath = "data/user/temp/logs"
+    if os.path.isdir(logDirPath) != True:
+        os.mkdir(logDirPath)
+
     configPath = "data/user/config.json"
     if os.path.isfile(configPath) != True:
         shutil.copyfile("data/assets/default_config/config.json", "data/user/config.json")
