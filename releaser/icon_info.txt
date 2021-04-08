@@ -1,1 +1,1 @@
-The .png icon was converted to .ico using https://icoconvert.com/
+The .png icon was converted to .ico using ImageMagick's convert command. (https://doc.qt.io/qt-5/appicon.html)

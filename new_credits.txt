@@ -228,6 +228,7 @@ https://stackoverflow.com/questions/33916409/how-to-save-image-in-memory-and-upl
 https://stackoverflow.com/questions/35655755/qpixmap-argument-1-has-unexpected-type-pngimagefile
 https://stackoverflow.com/questions/24835155/pyw-and-pythonw-does-not-run-under-windows-7
 https://stackoverflow.com/questions/82831/how-do-i-check-whether-a-file-exists-without-exceptions
+https://doc.qt.io/qt-5/appicon.html
 
 other things:
 https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails/2920001

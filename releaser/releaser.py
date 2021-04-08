@@ -11,7 +11,7 @@ class MainExporter:
         #(out, err) = proc.communicate()
         #expLogger.info(out)
 
-        subprocess.run("pyinstaller --noconfirm --onedir --console --icon \"icon3_UaA_icon.ico\" --name \"AscentViewer\" --add-data \"../data;data/\"  \"../ascv.py\"")
+        subprocess.run('pyinstaller --noconfirm --onedir --console --icon "icon/win_icon.ico" --name "AscentViewer" --add-data "../data;data/"  "../ascv.py"')
 
 if __name__ == "__main__":
     print("This script might make some changes to your system. Are you sure you want to continue? (y/yes/n/no)\n> ", end="")
