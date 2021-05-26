@@ -10,6 +10,7 @@ DDIV's [website](https://despawnedd.acrazytown.com/ddiv).
 ## New DDIV 
 
 DDIV has been seperated into 2 different versions: **Legacy** and **AscentViewer**\
+
 **Legacy DDIV** is every version labelled as "DDIV" (up to **0.1.0.9**)\
 **AscentViewer (or New DDIV)** is a rewrite of DDIV using **[PyQT](https://riverbankcomputing.com/software/pyqt/)** with a much more friendlier design.
 
