@@ -1,0 +1,16 @@
+{
+    "commonMetadata":
+    {
+        "name": "AscentedNordLight",
+        "description": "A light version of the main AscentViewer theme, AscentedNordDark. Also based on Nord (https://www.nordtheme.com/docs/colors-and-palettes)",
+        "author": "DespawnedDiamond",
+        "version": "1.0.0"
+    },
+    "themeData":
+    {
+        "style": "Fusion",
+        "paletteJSONPath": "palette.jsonc",
+        "styleSheetPath": "style.qss",
+        "imgPackPath": "img"
+    }
+}

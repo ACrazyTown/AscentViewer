@@ -1,0 +1,183 @@
+/* The main AscentViewer theme; based on Nord (https://www.nordtheme.com/docs/colors-and-palettes) */
+
+QToolTip
+{
+    color: white;
+    background-color: #2a82da;
+    border: 1px solid white;
+}
+
+QMenuBar
+{
+    border: none;
+    /*spacing: 14px;*/
+}
+/*
+QMenuBar::item
+{
+    margin: 4px;
+    margin-top: 8px;
+}
+*/
+QMenu::item:disabled
+{
+    background-color: #292E39;
+    color: #4C566A;
+}
+
+QPushButton, QToolButton
+{
+    border: none;
+    background: rgba(0, 0, 0, 0);
+}
+
+QPushButton:hover, QToolButton:hover
+{
+    background: rgba(0, 0, 0, 125);
+}
+
+QPushButton:pressed, QToolButton:pressed
+{
+    background: rgba(0, 0, 0, 175);
+}
+
+QToolButton::menu-indicator
+{
+    image: none;
+}
+
+QSplitter::handle#MainSplitter
+{
+    background: _accentColorMain;
+    height: 2;
+}
+
+QFrame#Bottom
+{
+    background: _accentColorDarker;
+}
+
+QToolButton#BottomButton
+{
+    background: _accentColorDarker;
+}
+
+QStatusBar
+{
+    color: white;
+    background: _accentColorMain;
+}
+
+QLabel#HelpTitle
+{
+    color: #92969D;
+}
+
+QWidget#verticalWidget
+{
+    background:#3B4252;
+}
+
+QTabWidget::pane
+{
+    background-color: #2E3440;
+    /*border: 1px solid #1E2129;*/
+    border: none;
+    /*top: -1px;*/
+}
+/*
+QTabWidget::tab-bar
+{
+    left: 4px;
+}
+*/
+QTabBar::tab
+{
+    background-color: #2E3440;
+    border: 1px solid #1E2129;
+    /*margin-right: -1px;*/
+    border-bottom-color: #2E3440;
+    min-width: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+QTabBar::tab:selected
+{
+    height: 20px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: -4px;
+    border-bottom-right-radius: -4px;
+}
+
+QTabBar::tab:!selected
+{
+    border-color: #262B35;
+    /*height: 15px;*/
+    /*border-bottom-color: #1E2129;*/
+    color: #4C566A;
+    background-color: #262B35;
+    /*top: 5px;*/
+}
+
+/*
+QTabBar::tab:first
+{
+    border-left: none;
+    border-top-left-radius: 0px;
+}
+
+QTabBar::tab:only-one
+{
+    border-left: none;
+    border-top-left-radius: 0px;
+}
+
+QTabBar::tab:last
+{
+    margin-right: 0;
+    border-top-right-radius: 4px;
+}
+*/
+QTabBar::close-button
+{
+    /*border: none;*/
+    /*margin-left: -5px;*/
+}
+
+QTabBar::close-button:selected
+{
+    image: url(./assets/img/close.png)
+}
+
+QTabBar::close-button:!selected
+{
+    image: url(./assets/img/close_disabled.png);
+}
+
+QTabBar::close-button:hover
+{
+    image: url(./assets/img/close.png);
+    background: rgba(0, 0, 0, 125);
+}
+
+QTabBar::close-button
+{
+    image: url(./assets/img/close.png);
+}
+
+QTabBar::close-button:pressed
+{
+    background: rgba(0, 0, 0, 175);
+}
+
+QToolTip
+{
+    color: white;
+    background-color: #262B35;
+    border: 1px solid #1E2129;
+    padding: 1px;
+}

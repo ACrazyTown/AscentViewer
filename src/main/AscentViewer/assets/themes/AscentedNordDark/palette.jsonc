@@ -1,0 +1,19 @@
+// Based on https://gist.github.com/QuantumCD/6245215 and https://www.nordtheme.com/docs/colors-and-palettes
+
+{
+    "palette":
+    {
+        // "Link" and "Highlight" are not present here because those two colors are stored in the config.json file.
+        "Window": "#262B35",
+        "WindowText": "#E5E9F0",
+        "Base": "#2E3440",
+        "AlternateBase": "#262B35",
+        "ToolTipBase": "#2E3440",
+        "ToolTipText": "#E5E9F0",
+        "Text": "#E5E9F0",
+        "Button": "#22262F",
+        "ButtonText": "#E5E9F0",
+        "BrightText": "#BF616A",
+        "HighlightedText": "white"
+    }
+}

@@ -1,0 +1,70 @@
+/* A light version of the main AscentViewer theme, AscentedNordDark. Also based on Nord (https://www.nordtheme.com/docs/colors-and-palettes) */
+
+QToolTip
+{
+    color: white;
+    background-color: #2a82da;
+    border: 1px solid white;
+}
+
+QMenu::item:disabled
+{
+    background-color: #F8FAFF;
+    color: #4C566A;
+}
+
+QPushButton#arrowButtons
+{
+    border: none;
+    background: rgba(0, 0, 0, 0);
+}
+
+QPushButton:hover#arrowButtons
+{
+    background: rgba(0, 0, 0, 125);
+}
+
+QPushButton:pressed#arrowButtons
+{
+    background: rgba(0, 0, 0, 175);
+}
+
+QSplitter::handle#MainSplitter
+{
+    background: _accentColorMain;
+    height: 2;
+}
+
+QFrame#Bottom
+{
+    background: _accentColorLighter;
+}
+
+QToolButton#BottomButton
+{
+    background: _accentColorLighter;
+}
+
+QToolButton::menu-indicator#BottomButton
+{
+    image: url(data/assets/img/dropdown_arrow.png);
+    subcontrol-position: center;
+    subcontrol-origin: padding;
+}
+
+QStatusBar
+{
+    color: white;
+    background: _accentColorMain;
+}
+
+QLabel#HelpTitle
+{
+    color: #6C6F75;
+}
+
+
+QWidget#verticalWidget
+{
+    background:#D8DEE9;
+}
